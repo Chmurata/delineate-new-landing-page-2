@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core palette — periwinkle theme */
+  --color-base: #020B0F;
+  --color-surface: #07112B;
+  --color-surface-raised: #1F2F50;
+  --color-accent: #7C9ED9;
+  --color-accent-dark: #0E1524;
+  --color-navy-hero: #07112B;
+  --color-navy-dark: #0F172A;
+  --color-navy-mid: #162040;
+  --color-navy-slate: #334155;
+
+  /* Text */
+  --color-text-heading: #FFFFFF;
+  --color-text-body: #9BA3A0;
+  --color-text-caption: #4F5D59;
+  --color-text-on-accent: #041812;
+
+  /* Borders */
+  --color-border-subtle: #1A2744;
+  --color-border-default: #2A3A5A;
+  --color-border-strong: #334155;
+
+  /* Typography */
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Animation timing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 600ms;
+}
+
+/* ─── Base ─── */
+/* Tailwind v4 preflight handles *, margin, padding, box-sizing — no custom reset needed */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--color-base);
+  color: #fff;
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Gradient shift (lightweight CSS-only for mobile numbers) ─── */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ─── Shimmer ─── */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  50.1%, 100% { transform: translateX(-100%); }
+}
+
+/* ─── Background gradient blob drifts ─── */
+@keyframes driftA {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  25% { transform: translate(12%, -8%) scale(1.1); }
+  50% { transform: translate(-6%, 12%) scale(0.95); }
+  75% { transform: translate(8%, 5%) scale(1.05); }
+}
+
+@keyframes driftB {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33% { transform: translate(-10%, 8%) scale(1.08); }
+  66% { transform: translate(8%, -10%) scale(0.96); }
+}
+
+@keyframes driftC {
+  0%, 100% { transform: translate(0%, 0%) scale(1.05); }
+  50% { transform: translate(10%, -6%) scale(0.92); }
+}
+
+@keyframes driftD {
+  0%, 100% { transform: translate(0%, 0%) scale(0.95); }
+  40% { transform: translate(-8%, -10%) scale(1.1); }
+  80% { transform: translate(6%, 8%) scale(1); }
+}
+
+/* ─── Cinematic Pro — split-axis cell drifts ─── */
+@keyframes driftX1 {
+  0%, 100% { translate: 0px 0; }
+  20% { translate: 55px 0; }
+  55% { translate: -40px 0; }
+  80% { translate: 25px 0; }
+}
+@keyframes driftX2 {
+  0%, 100% { translate: 0px 0; }
+  35% { translate: -65px 0; }
+  70% { translate: 35px 0; }
+}
+@keyframes driftX3 {
+  0%, 100% { translate: 0px 0; }
+  25% { translate: 30px 0; }
+  50% { translate: -50px 0; }
+  75% { translate: 20px 0; }
+}
+@keyframes driftX4 {
+  0%, 100% { translate: 0px 0; }
+  40% { translate: -35px 0; }
+  80% { translate: 45px 0; }
+}
+@keyframes driftX5 {
+  0%, 100% { translate: 0px 0; }
+  30% { translate: 75px 0; }
+  60% { translate: -25px 0; }
+  85% { translate: 40px 0; }
+}
+
+@keyframes driftY1 {
+  0%, 100% { translate: 0 0px; }
+  30% { translate: 0 -45px; }
+  60% { translate: 0 35px; }
+  85% { translate: 0 -20px; }
+}
+@keyframes driftY2 {
+  0%, 100% { translate: 0 0px; }
+  45% { translate: 0 55px; }
+  80% { translate: 0 -30px; }
+}
+@keyframes driftY3 {
+  0%, 100% { translate: 0 0px; }
+  20% { translate: 0 -35px; }
+  50% { translate: 0 50px; }
+  75% { translate: 0 -25px; }
+}
+@keyframes driftY4 {
+  0%, 100% { translate: 0 0px; }
+  35% { translate: 0 -60px; }
+  70% { translate: 0 40px; }
+}
+@keyframes driftY5 {
+  0%, 100% { translate: 0 0px; }
+  25% { translate: 0 28px; }
+  55% { translate: 0 -45px; }
+  80% { translate: 0 20px; }
+}
+
+/* Slow rotation */
+@keyframes cellRot1 {
+  0%, 100% { rotate: 0deg; }
+  50% { rotate: 8deg; }
+}
+@keyframes cellRot2 {
+  0%, 100% { rotate: 0deg; }
+  50% { rotate: -10deg; }
+}
+@keyframes cellRot3 {
+  0%, 100% { rotate: -3deg; }
+  50% { rotate: 12deg; }
+}
+@keyframes cellRot4 {
+  0%, 100% { rotate: 5deg; }
+  50% { rotate: -7deg; }
+}
