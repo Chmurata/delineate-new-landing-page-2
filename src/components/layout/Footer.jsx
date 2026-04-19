@@ -57,8 +57,8 @@ export default function Footer() {
             © 2026 Delineate
           </p>
           <a
-            href="#"
-            className="font-body text-text-caption text-xs hover:text-text-body transition-colors underline-offset-4 hover:underline"
+            href="/privacy"
+            className="font-body text-text-caption text-xs hover:text-text-body transition-colors no-underline"
           >
             Privacy Policy
           </a>
