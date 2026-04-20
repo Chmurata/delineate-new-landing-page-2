@@ -5,6 +5,7 @@
 */
 import { useEffect, useRef, useMemo } from 'react'
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
+import { useIsDesktop } from '../../hooks/useMediaQuery'
 
 const NEON_BLUE = '#00BFFF'
 const PERI  = '#7EB8FF'
@@ -96,12 +97,15 @@ const SCAN_LINE = 44
 const CONTAINER_H = 580
 
 function PaperThumbnail({ index, total }) {
+  const isDesktop = useIsDesktop()
   const config = useMemo(() => {
     const source = SOURCE_TYPES[index % SOURCE_TYPES.length]
     const r1 = seededRand(index + 1)
     const r4 = seededRand(index + 19)
-    const w = (56 + (index % 3) * 6) * 1.44
-    const h = (70 + (index % 3) * 5) * 1.44
+    // Desktop = standard size; smaller devices = 85% scale
+    const scale = isDesktop ? 1 : 0.85
+    const w = (56 + (index % 3) * 6) * 1.44 * scale
+    const h = (70 + (index % 3) * 5) * 1.44 * scale
     const hPct = (h / CONTAINER_H) * 100
     const endTop = SCAN_LINE - hPct
     const ANIM_DUR = 5
@@ -114,7 +118,7 @@ function PaperThumbnail({ index, total }) {
     const rot = -8 + r4 * 16
 
     return { x: xPos, rotation: rot, width: w, height: h, endTop, duration: ANIM_DUR, delay: del, repeatWait: REPEAT_WAIT, accent: source.color, label: source.label, visual: source.visual }
-  }, [index, total])
+  }, [index, total, isDesktop])
 
   const yEnd = ((config.endTop - SPAWN_TOP) / 100) * CONTAINER_H
   const yStep1 = (2 / 100) * CONTAINER_H
@@ -148,7 +152,13 @@ function PaperThumbnail({ index, total }) {
         times: [0, 0.06, scanTime, 1], ease: 'linear',
       }}
     >
-      <div style={{ fontSize: 5.5, fontWeight: 700, fontFamily: "'Inter', sans-serif", color: config.accent, letterSpacing: 0.8, textTransform: 'uppercase', padding: '4px 6px 2px', opacity: 0.9 }}>
+      <div style={{
+        fontSize: Math.max(config.width * 0.095, 7),
+        fontWeight: 700, fontFamily: "'Inter', sans-serif",
+        color: config.accent, letterSpacing: 0.5, textTransform: 'uppercase',
+        padding: `${config.width * 0.05}px ${config.width * 0.08}px 0`,
+        opacity: 0.9,
+      }}>
         {config.label}
       </div>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', filter: `drop-shadow(0 0 4px ${config.accent}50)` }}>
