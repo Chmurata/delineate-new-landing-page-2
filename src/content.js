@@ -168,7 +168,7 @@ export const footer = {
   url: 'delineate.pro',
   backed: 'Backed by MIT · Y Combinator · NIH SEED',
   socials: {
-    linkedin: '#',
+    linkedin: 'https://www.linkedin.com/company/delineate-pro/',
     twitter: '#',
   },
 }
