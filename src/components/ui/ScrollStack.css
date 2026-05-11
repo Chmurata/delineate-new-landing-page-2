@@ -1,0 +1,37 @@
+/* ScrollStack — adapted from React Bits (https://reactbits.dev/components/scroll-stack)
+ * Uses window scroll + Lenis. Cards stack via JS-driven transforms in ScrollStack.jsx;
+ * this file only provides the scroll runway + the per-card layer hints. */
+
+.scroll-stack-scroller {
+  position: relative;
+  width: 100%;
+  /* `useWindowScroll: true` mode — no nested scroller. Container only flows naturally. */
+}
+
+.scroll-stack-inner {
+  /* Top runway: first card scrolls in from below the stack-position before pinning. */
+  padding-top: 12vh;
+  /* Bottom runway: last card has scroll room to pin → release before footer. */
+  padding-bottom: 60vh;
+  position: relative;
+}
+
+.scroll-stack-card {
+  /* GPU layer hints — set by JS too, redundant defaults here for SSR / first paint. */
+  transform-origin: top center;
+  will-change: transform, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.scroll-stack-end {
+  width: 100%;
+  height: 1px;
+  pointer-events: none;
+}

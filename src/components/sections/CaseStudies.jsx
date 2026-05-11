@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import Container from '../ui/Container'
 import CTAButton from '../ui/CTAButton'
 import SectionHeading from '../ui/SectionHeading'
-import { caseStudies } from '../../content'
+import { caseStudies, hero } from '../../content'
 import { glassCardStyle } from '../../lib/glass'
 
 const ACCENT = '#7C9ED9'
@@ -107,7 +108,7 @@ export default function CaseStudies() {
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.25 }}
               className="rounded-3xl h-full flex flex-col overflow-hidden"
-              style={{ ...glassCardStyle(ACCENT), background: 'rgba(8, 12, 24, 0.35)' }}
+              style={{ ...glassCardStyle(ACCENT) }}
             >
               {/* Image */}
               <div className="overflow-hidden" style={{ height: 'clamp(140px, 20vw, 180px)', background: 'linear-gradient(135deg, rgba(8, 12, 24, 0.9) 0%, rgba(20, 35, 70, 0.5) 100%)' }}>
@@ -126,9 +127,32 @@ export default function CaseStudies() {
                 <p className="font-body text-accent opacity-60" style={{ fontSize: 'clamp(11px, 1.3vw, 13px)' }}>
                   {item.metrics}
                 </p>
-                <p className="font-heading text-text-body" style={{ fontSize: 'clamp(13px, 1.5vw, 15px)', lineHeight: '24px' }}>
-                  {item.description}
-                </p>
+                {(item.paragraphs || [item.description]).filter(Boolean).map((para, pi) => (
+                  <p key={pi} className="font-heading text-text-body" style={{ fontSize: 'clamp(13px, 1.5vw, 15px)', lineHeight: '24px' }}>
+                    {para}
+                  </p>
+                ))}
+
+                {item.readMoreHref && (
+                  <a
+                    href={item.readMoreHref}
+                    aria-disabled={item.readMoreHref === '#'}
+                    onClick={e => { if (item.readMoreHref === '#') e.preventDefault() }}
+                    className="inline-flex items-center gap-1.5 mt-2 font-body font-semibold transition-opacity duration-200"
+                    style={{
+                      color: ACCENT,
+                      fontSize: 'clamp(12px, 1.4vw, 13px)',
+                      letterSpacing: '0.3px',
+                      opacity: item.readMoreHref === '#' ? 0.55 : 1,
+                      cursor: item.readMoreHref === '#' ? 'not-allowed' : 'pointer',
+                      textDecoration: 'none',
+                      width: 'fit-content',
+                    }}
+                  >
+                    {caseStudies.readMoreLabel || 'Read more'}
+                    <ArrowRightIcon style={{ width: 12, height: 12, flexShrink: 0 }} />
+                  </a>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
@@ -137,7 +161,7 @@ export default function CaseStudies() {
 
       {/* CTA #2 — same Neon Glow style as hero */}
       <div className="flex justify-center mt-12">
-        <CTAButton variant="primary">Book a Free Discovery Call</CTAButton>
+        <CTAButton variant="primary">{hero.cta.primary}</CTAButton>
       </div>
     </Container>
   )

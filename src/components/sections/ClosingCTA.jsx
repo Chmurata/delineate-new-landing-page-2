@@ -150,7 +150,7 @@ const liquidStyles = `
 }
 `
 
-function SubmitButton({ onSubmit, disabled }) {
+function SubmitButton({ onSubmit, disabled, label = 'Submit' }) {
   const [phase, setPhase] = useState('idle') // idle | shake | filling | done
   const [fillPct, setFillPct] = useState(100)
   const btnAnim = useAnimation()
@@ -304,7 +304,7 @@ function SubmitButton({ onSubmit, disabled }) {
           animate={{ opacity: showCheck ? 0 : 1, scale: showCheck ? 0.8 : 1 }}
           transition={{ duration: 0.15 }}
         >
-          Book a Free Discovery Call
+          {label}
           <ArrowRightIcon style={{ width: 14, height: 14, flexShrink: 0 }} />
         </motion.span>
 
@@ -343,32 +343,26 @@ export default function ClosingCTA() {
         <CrossFadeVideo />
 
         <div className="flex flex-col lg:flex-row gap-[clamp(24px,4vw,48px)] relative">
-          {/* Left: headline + testimonial */}
-          <div className="flex-1 flex flex-col justify-center">
+          {/* Left: headline + body + testimonial */}
+          <div className="flex-1 flex flex-col justify-start">
             <h2
-              className="font-heading font-bold text-text-heading mb-6"
+              className="font-heading font-bold text-text-heading mb-4"
               style={{ fontSize: 'clamp(1.25rem, 3vw, 1.75rem)', lineHeight: 1.25 }}
             >
               {closingCTA.headline}
             </h2>
-            <p
-              className="font-heading font-medium text-text-heading mb-5 italic opacity-85"
-              style={{ fontSize: 'clamp(0.875rem, 1.8vw, 1rem)', lineHeight: '26px' }}
-            >
-              "We went from 6 months of manual literature review to a complete, auditable MBMA database in under 5 weeks."
-            </p>
-            <div>
-              <div className="font-heading font-semibold text-text-heading text-[13px] mb-0.5">
-                Senior Director, Pharmacometrics
-              </div>
-              <div className="font-heading text-text-caption text-xs">
-                Top 10 Pharma
-              </div>
-            </div>
+            {closingCTA.body && (
+              <p
+                className="font-heading text-text-body mb-6"
+                style={{ fontSize: 'clamp(0.8125rem, 1.6vw, 0.9375rem)', lineHeight: '24px' }}
+              >
+                {closingCTA.body}
+              </p>
+            )}
           </div>
 
           {/* Right: form */}
-          <div className="flex-1 flex flex-col gap-3 justify-center">
+          <div className="flex-1 flex flex-col gap-3 justify-start">
             <FormField
               type="email"
               placeholder="Work email"
@@ -382,6 +376,7 @@ export default function ClosingCTA() {
               multiline
             />
             <SubmitButton
+              label={closingCTA.cta}
               onSubmit={() => {
                 if (!form.email.trim()) return false
                 // Clear form after successful submit
@@ -392,6 +387,22 @@ export default function ClosingCTA() {
             <p className="font-heading text-text-caption text-xs text-center mt-1">
               We'll respond within 24 hours
             </p>
+            {closingCTA.secondaryLink && (
+              <a
+                href="#"
+                className="font-heading text-center font-semibold transition-opacity duration-200 mt-1"
+                style={{
+                  color: ACCENT,
+                  fontSize: 'clamp(12px, 1.4vw, 13px)',
+                  letterSpacing: '0.3px',
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '0.85' }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+              >
+                {closingCTA.secondaryLink} →
+              </a>
+            )}
           </div>
         </div>
       </div>

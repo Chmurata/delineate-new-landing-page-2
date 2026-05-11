@@ -4,19 +4,20 @@ import PreloaderAnimation from './components/background/PreloaderAnimation'
 import CinematicBg from './components/background/CinematicBg'
 import ScrollCells from './components/background/ScrollCells'
 import Navbar from './components/layout/Navbar'
+import LayoutSwitcher from './components/layout/LayoutSwitcher'
 import HeroSection from './components/hero/HeroSection'
 import SocialProof from './components/sections/SocialProof'
 import useActiveSection from './hooks/useActiveSection'
 
-const Differentiators = lazy(() => import('./components/sections/Differentiators'))
+const Capabilities = lazy(() => import('./components/sections/Capabilities'))
+const Audiences = lazy(() => import('./components/sections/Audiences'))
+const Databases = lazy(() => import('./components/sections/Databases'))
 const CaseStudies = lazy(() => import('./components/sections/CaseStudies'))
-const Process = lazy(() => import('./components/sections/Process'))
-const Services = lazy(() => import('./components/sections/Services'))
 const ClosingCTA = lazy(() => import('./components/sections/ClosingCTA'))
 const Footer = lazy(() => import('./components/layout/Footer'))
 
 const BASE = '#020B0F'
-const SECTION_IDS = ['hero', 'socialproof', 'differentiators', 'casestudies', 'process', 'services', 'closing']
+const SECTION_IDS = ['hero', 'socialproof', 'capabilities', 'audiences', 'databases', 'casestudies', 'closing']
 
 function SectionWrap({ id, sectionRef, children, className = '' }) {
   return (
@@ -65,6 +66,9 @@ export default function App() {
       {/* Navbar */}
       <Navbar scrollToSection={scrollToSection} />
 
+      {/* Layout switcher (FAB) */}
+      <LayoutSwitcher />
+
       {/* Hero */}
       <SectionWrap id="hero" sectionRef={sectionRefs.hero}>
         <HeroSection />
@@ -77,20 +81,20 @@ export default function App() {
         </SectionWrap>
 
         <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
-          <SectionWrap id="differentiators" sectionRef={sectionRefs.differentiators} className="py-[clamp(3rem,6vw,5rem)]">
-            <Differentiators />
+          <SectionWrap id="capabilities" sectionRef={sectionRefs.capabilities} className="py-[clamp(3rem,6vw,5rem)]">
+            <Capabilities />
+          </SectionWrap>
+
+          <SectionWrap id="audiences" sectionRef={sectionRefs.audiences} className="py-[clamp(3rem,6vw,5rem)]">
+            <Audiences />
+          </SectionWrap>
+
+          <SectionWrap id="databases" sectionRef={sectionRefs.databases} className="py-[clamp(3rem,6vw,5rem)]">
+            <Databases />
           </SectionWrap>
 
           <SectionWrap id="casestudies" sectionRef={sectionRefs.casestudies} className="py-[clamp(3rem,6vw,5rem)]">
             <CaseStudies />
-          </SectionWrap>
-
-          <SectionWrap id="process" sectionRef={sectionRefs.process} className="py-[clamp(3rem,6vw,5rem)]">
-            <Process />
-          </SectionWrap>
-
-          <SectionWrap id="services" sectionRef={sectionRefs.services} className="py-[clamp(3rem,6vw,5rem)]">
-            <Services />
           </SectionWrap>
 
           <SectionWrap id="closing" sectionRef={sectionRefs.closing} className="py-[clamp(3rem,6vw,5rem)]">
