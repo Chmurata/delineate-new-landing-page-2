@@ -16,7 +16,7 @@ const DOC_TYPES = [
   { color: GREEN, label: 'TRIAL', visual: 'grid' },
   { color: GOLD, label: 'FDA', visual: 'ema' },
   { color: PERI, label: 'EMA', visual: 'ema' },
-  { color: CORAL, label: 'POSTER', visual: 'poster' },
+  { color: CORAL, label: 'CONFERENCE POSTER', visual: 'poster' },
 ]
 
 const DOCS = DOC_TYPES.map((t, i) => ({
@@ -29,9 +29,9 @@ const DOCS = DOC_TYPES.map((t, i) => ({
 
 const GRID_COLS = 4
 const GRID_ROWS = 6
-const CELL = 22
+const CELL = 32
 const CELL_GAP = 6
-const GRID_X = 340
+const GRID_X = 330
 const GRID_Y = 60
 const CELLS = Array.from({ length: GRID_COLS * GRID_ROWS }, (_, i) => {
   const c = i % GRID_COLS
@@ -235,7 +235,6 @@ export default function Ill01({ active = false, className = '', id = 'ill01' }) 
         rx={14}
         ry={14}
         fill="rgba(8,12,24,0.35)"
-        filter={`url(#${id}-soft)`}
       />
 
       {/* Header */}
@@ -296,7 +295,7 @@ export default function Ill01({ active = false, className = '', id = 'ill01' }) 
               width={d.w}
               height={d.h}
               rx={4}
-              fill="rgba(8, 12, 24, 0.5)"
+              fill="none"
               stroke={d.color}
               strokeWidth={1}
               opacity={0.85}
@@ -321,8 +320,8 @@ export default function Ill01({ active = false, className = '', id = 'ill01' }) 
         ))}
       </g>
 
-      {/* Extraction lines — gradient stroke from source color to periwinkle */}
-      <g fill="none" strokeWidth={1.2}>
+      {/* Extraction lines — thin gradient strokes, no filter, no float */}
+      <g fill="none" strokeWidth={0.5}>
         {DOCS.map((d, i) => (
           <path
             key={i}
@@ -334,34 +333,58 @@ export default function Ill01({ active = false, className = '', id = 'ill01' }) 
         ))}
       </g>
 
-      {/* Grid lattice (unified destination — all periwinkle) */}
+      {/* Grid lattice — hairline empty cells + glowing destination cells */}
       <g>
-        {/* Subtle outer frame */}
-        <rect
-          x={GRID_X - 4}
-          y={GRID_Y - 4}
-          width={GRID_COLS * (CELL + CELL_GAP) - CELL_GAP + 8}
-          height={GRID_ROWS * (CELL + CELL_GAP) - CELL_GAP + 8}
-          rx={4}
-          fill="none"
-          stroke={ACCENT}
-          strokeWidth={0.6}
-          opacity={0.25}
-        />
-        {CELLS.map((c, i) => (
-          <rect
-            key={i}
-            className={`${id}-cell`}
-            x={c.x}
-            y={c.y}
-            width={CELL}
-            height={CELL}
-            rx={3}
-            fill={ACCENT}
-            opacity={0.15}
-            style={{ transformOrigin: `${c.x + CELL / 2}px ${c.y + CELL / 2}px` }}
-          />
-        ))}
+        {/* Empty cells: faint stroked outlines, no fill */}
+        {CELLS.map((c, i) => {
+          const isDestination = i % GRID_COLS === 0
+          if (isDestination) return null
+          return (
+            <rect
+              key={i}
+              x={c.x}
+              y={c.y}
+              width={CELL}
+              height={CELL}
+              rx={3}
+              fill="none"
+              stroke={PERI}
+              strokeWidth={0.5}
+              strokeOpacity={0.18}
+            />
+          )
+        })}
+        {/* Destination cells (leftmost of each row): soft fill + center dot */}
+        {CELLS.map((c, i) => {
+          if (i % GRID_COLS !== 0) return null
+          return (
+            <g
+              key={`dst-${i}`}
+              className={`${id}-cell`}
+              style={{ transformOrigin: `${c.x + CELL / 2}px ${c.y + CELL / 2}px` }}
+            >
+              <rect
+                x={c.x}
+                y={c.y}
+                width={CELL}
+                height={CELL}
+                rx={3}
+                fill={PERI}
+                fillOpacity={0.13}
+                stroke={PERI}
+                strokeWidth={0.6}
+                strokeOpacity={0.55}
+              />
+              <circle
+                cx={c.x + CELL / 2}
+                cy={c.y + CELL / 2}
+                r={1.6}
+                fill={PERI}
+                opacity={0.9}
+              />
+            </g>
+          )
+        })}
       </g>
     </svg>
   )

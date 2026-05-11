@@ -223,7 +223,6 @@ export default function Ill03({ active = false, className = '', id = 'ill03' }) 
         rx={14}
         ry={14}
         fill="rgba(8,12,24,0.35)"
-        filter={`url(#${id}-soft)`}
       />
 
       {/* Header */}

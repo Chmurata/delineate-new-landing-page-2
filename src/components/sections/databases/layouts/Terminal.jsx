@@ -1,40 +1,43 @@
-import { useEffect, useRef } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
-import gsap from 'gsap'
-import {
-  CheckCircle,
-  MagnifyingGlass,
-  LinkSimple,
-  Flag,
-  ShieldCheck,
-  Quotes,
-} from '@phosphor-icons/react'
+import { motion } from 'framer-motion'
+import { CheckCircle, Quotes } from '@phosphor-icons/react'
 import Container from '../../../ui/Container'
 import { glassCardStyle } from '../../../../lib/glass'
 import { databases } from '../../../../content'
+import ProvenanceConstellation from './ProvenanceConstellation'
+
+// Render a string with **bold** markdown segments as JSX
+function renderBold(text) {
+  return text.split(/(\*\*[^*]+\*\*)/).map((seg, i) => {
+    if (seg.startsWith('**') && seg.endsWith('**')) {
+      return (
+        <strong key={i} className="text-text-heading" style={{ fontWeight: 600 }}>
+          {seg.slice(2, -2)}
+        </strong>
+      )
+    }
+    return <span key={i}>{seg}</span>
+  })
+}
 
 const ACCENT = '#7C9ED9'
 const PERI = '#7EB8FF'
-const LABEL_DIM = 'rgba(220,230,245,0.55)'
 
-const IO_FORMATS = ['NONMEM', 'Monolix', 'Phoenix NLME', 'R / Python', 'Excel']
-
-const INTEGRITY = [
-  { label: 'Double-blind QC', Icon: CheckCircle },
-  { label: 'Source-verified', Icon: MagnifyingGlass },
-  { label: 'Cross-checked', Icon: LinkSimple },
-  { label: 'Outlier-flagged', Icon: Flag },
-  { label: 'Audit-ready', Icon: ShieldCheck },
+const NONMEM_ROWS = [
+  ['1001', '168', '7.21', '2'],
+  ['1001', '336', '6.84', '2'],
+  ['1002', '168', '7.83', '2'],
+  ['1002', '336', '7.45', '2'],
+  ['1003', '168', '8.12', '2'],
+  ['1003', '336', '7.93', '2'],
 ]
 
-const PIPELINE = [
-  'Extract',
-  'Arbitrate',
-  'Verify',
+const QC_CHECKS = [
+  'Source match',
+  'Dual extract',
+  'Outlier scan',
   'Consistency',
-  'Outlier flag',
+  'Schema spec',
   'Audit trail',
-  'Deliver',
 ]
 
 function RailLabel({ children, align = 'left' }) {
@@ -60,170 +63,141 @@ function RailLabel({ children, align = 'left' }) {
   )
 }
 
-function FormatChip({ label }) {
+function NonmemPreview() {
+  const headers = ['ID', 'TIME', 'DV', 'DVID']
   return (
     <div
       className="rounded-lg"
-      style={{ ...glassCardStyle(ACCENT), padding: '10px 12px' }}
-    >
-      <span
-        className="font-body text-text-heading"
-        style={{
-          fontSize: 12,
-          letterSpacing: '0.02em',
-          fontWeight: 600,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  )
-}
-
-function IntegrityChip({ Icon, label, align = 'left' }) {
-  return (
-    <div
-      className="rounded-lg flex items-center gap-2"
       style={{
         ...glassCardStyle(ACCENT),
-        padding: '10px 12px',
-        justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+        padding: '12px 12px 10px',
       }}
     >
-      {align === 'left' && <Icon size={14} color={PERI} weight="thin" />}
-      <span
-        className="font-body text-text-heading"
+      <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
+        <span
+          style={{
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 9,
+            color: PERI,
+            opacity: 0.85,
+            letterSpacing: '0.06em',
+            fontWeight: 600,
+          }}
+        >
+          NONMEM.CSV
+        </span>
+        <span
+          style={{
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 8,
+            color: PERI,
+            opacity: 0.45,
+          }}
+        >
+          n=23,142
+        </span>
+      </div>
+      <div style={{ height: 1, background: `${PERI}22`, marginBottom: 6 }} />
+      <div
         style={{
-          fontSize: 12,
-          letterSpacing: '0.02em',
-          fontWeight: 500,
-          whiteSpace: 'nowrap',
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          fontSize: 9,
+          lineHeight: '14px',
         }}
       >
-        {label}
-      </span>
-      {align === 'right' && <Icon size={14} color={PERI} weight="thin" />}
+        <div className="grid" style={{ gridTemplateColumns: '1.1fr 1fr 1fr 0.6fr', columnGap: 6, color: PERI, opacity: 0.7, fontWeight: 600 }}>
+          {headers.map((h) => <span key={h}>{h}</span>)}
+        </div>
+        <div style={{ height: 1, background: `${PERI}14`, margin: '4px 0' }} />
+        {NONMEM_ROWS.map((row, i) => (
+          <div
+            key={i}
+            className="grid"
+            style={{
+              gridTemplateColumns: '1.1fr 1fr 1fr 0.6fr',
+              columnGap: 6,
+              color: 'rgba(220,230,245,0.78)',
+              opacity: 1 - i * 0.06,
+            }}
+          >
+            {row.map((cell, j) => <span key={j}>{cell}</span>)}
+          </div>
+        ))}
+        <div style={{ color: `${PERI}`, opacity: 0.35, marginTop: 2 }}>…</div>
+      </div>
     </div>
   )
 }
 
-function PipelineStrip() {
-  const prefersReduce = useReducedMotion()
-  const scopeRef = useRef(null)
-
-  useEffect(() => {
-    if (prefersReduce) return
-    const ctx = gsap.context(() => {
-      // Beam travels left -10% → 110% (centre offset 5% → 105%). Total centre travel = 100% over CYCLE.
-      const CYCLE = 16 // seconds — slow, meditative pass
-      const tl = gsap.timeline({ repeat: -1 })
-
-      // Beam motion — linear, full cycle
-      tl.fromTo(
-        '.pipeline-beam',
-        { left: '-12%' },
-        { left: '112%', duration: CYCLE, ease: 'none' },
-        0,
-      )
-
-      // Sympathetic glow on each bar + label as beam centre passes
-      PIPELINE.forEach((_, i) => {
-        // Beam centre starts at -7%, ends at 117%. Total centre travel = 124%.
-        // Bar i centre sits at (i + 0.5) × (100/7)% = (i + 0.5) × 14.286%.
-        const barCentrePct = (i + 0.5) * (100 / PIPELINE.length)
-        const t = CYCLE * (barCentrePct - -7) / 124
-
-        // Bar fades in/out (no scale — full width all along, just opacity)
-        tl.to(`.pipeline-bar-${i}`, { opacity: 1, duration: 0.9, ease: 'sine.in' }, t - 0.9)
-        tl.to(`.pipeline-bar-${i}`, { opacity: 0, duration: 1.1, ease: 'sine.out' }, t + 0.2)
-
-        // Label glows subtly — softer brightness than full PERI, eased
-        tl.to(`.pipeline-label-${i}`, { color: PERI, duration: 0.8, ease: 'sine.in' }, t - 0.7)
-        tl.to(`.pipeline-label-${i}`, { color: LABEL_DIM, duration: 1.0, ease: 'sine.out' }, t + 0.3)
-      })
-    }, scopeRef)
-    return () => ctx.revert()
-  }, [prefersReduce])
-
+function QcReportPreview() {
   return (
-    <div ref={scopeRef} className="mt-10 relative">
+    <div
+      className="rounded-lg"
+      style={{
+        ...glassCardStyle(ACCENT),
+        padding: '12px 12px 10px',
+      }}
+    >
+      <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
+        <span
+          style={{
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 9,
+            color: PERI,
+            opacity: 0.85,
+            letterSpacing: '0.06em',
+            fontWeight: 600,
+          }}
+        >
+          QC_REPORT
+        </span>
+        <span
+          style={{
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 8,
+            color: PERI,
+            opacity: 0.45,
+          }}
+        >
+          47/47
+        </span>
+      </div>
+      <div style={{ height: 1, background: `${PERI}22`, marginBottom: 6 }} />
       <div
-        className="grid gap-3"
-        style={{ gridTemplateColumns: `repeat(${PIPELINE.length}, minmax(0, 1fr))` }}
+        style={{
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          fontSize: 9.5,
+          lineHeight: '16px',
+        }}
       >
-        {PIPELINE.map((step, i) => (
-          <div key={step} className="flex flex-col items-stretch">
-            <div
-              style={{
-                height: 3,
-                background: 'rgba(126, 184, 255, 0.15)',
-                borderRadius: 2,
-                overflow: 'hidden',
-                marginBottom: 8,
-              }}
-            >
-              <div
-                className={`pipeline-bar-${i}`}
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  background: PERI,
-                  opacity: 0,
-                }}
-              />
-            </div>
-            <span
-              className={`pipeline-label-${i} font-body text-center`}
-              style={{
-                fontSize: 11,
-                color: LABEL_DIM,
-                letterSpacing: '0.02em',
-                lineHeight: 1.3,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {step}
-            </span>
+        {QC_CHECKS.map((label, i) => (
+          <div
+            key={label}
+            className="flex items-center justify-between"
+            style={{ color: 'rgba(220,230,245,0.82)' }}
+          >
+            <span>{label}</span>
+            <CheckCircle size={11} color={PERI} weight="thin" style={{ opacity: 0.85 }} />
           </div>
         ))}
       </div>
-
-      {/* Traveling beam — soft glowing light passing over the strip */}
-      {!prefersReduce && (
-        <div
-          className="pipeline-beam"
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            top: -16,
-            left: '-12%',
-            width: '14%',
-            height: 60,
-            background:
-              'radial-gradient(ellipse at center, rgba(126,184,255,0.45) 0%, rgba(126,184,255,0.12) 40%, transparent 75%)',
-            filter: 'blur(6px)',
-            pointerEvents: 'none',
-            mixBlendMode: 'screen',
-          }}
-        />
-      )}
     </div>
   )
 }
 
 function PullQuote({ children }) {
   return (
-    <div className="mt-12 flex justify-center">
-      <div className="relative max-w-[min(820px,90vw)] text-center">
+    <div className="mt-12 grid grid-cols-12 gap-5">
+      {/* Sits in the same center 8-of-12 columns as the terminal card, so its width visually aligns */}
+      <div className="col-span-12 lg:col-span-8 lg:col-start-3 relative text-center">
         <Quotes
-          size={64}
+          size={52}
           color={PERI}
           weight="fill"
           style={{
             position: 'absolute',
-            top: -28,
-            left: -8,
+            top: -22,
+            left: -4,
             opacity: 0.18,
             pointerEvents: 'none',
           }}
@@ -231,17 +205,18 @@ function PullQuote({ children }) {
         <p
           className="font-heading italic text-text-heading"
           style={{
-            fontSize: 'clamp(16px, 2vw, 22px)',
-            lineHeight: 1.4,
-            fontWeight: 500,
-            opacity: 0.95,
+            fontSize: 'clamp(11px, 1.3vw, 14.5px)',
+            lineHeight: 1.55,
+            fontWeight: 400,
+            opacity: 0.92,
+            whiteSpace: 'pre-line',
           }}
         >
           {children}
         </p>
         <div
           className="mx-auto mt-5"
-          style={{ width: 48, height: 2, background: PERI, opacity: 0.7 }}
+          style={{ width: 42, height: 2, background: PERI, opacity: 0.7 }}
         />
       </div>
     </div>
@@ -252,21 +227,25 @@ export default function Terminal() {
   return (
     <Container>
       <div className="max-w-[min(1240px,94vw)] mx-auto">
-        {/* Mobile-only formats strip */}
-        <div className="lg:hidden flex flex-wrap gap-2 mb-4">
-          {IO_FORMATS.map((f) => (
-            <FormatChip key={f} label={f} />
-          ))}
+        {/* Section title — pulled outside the card per Jawad's feedback */}
+        <div className="text-center mb-10">
+          <h2
+            className="font-heading font-bold text-text-heading mx-auto"
+            style={{
+              fontSize: 'clamp(1.5rem, 3.2vw, 2.125rem)',
+              lineHeight: 1.2,
+              maxWidth: 820,
+              whiteSpace: 'pre-line',
+            }}
+          >
+            {databases.title}
+          </h2>
         </div>
 
         <div className="grid grid-cols-12 gap-5 relative items-stretch">
-          <aside className="hidden lg:flex col-span-2 flex-col gap-4 justify-center">
-            <RailLabel>I/O Formats</RailLabel>
-            <div className="flex flex-col gap-2">
-              {IO_FORMATS.map((f) => (
-                <FormatChip key={f} label={f} />
-              ))}
-            </div>
+          <aside className="hidden lg:flex col-span-2 flex-col gap-3 justify-center">
+            <RailLabel>Delivered file</RailLabel>
+            <NonmemPreview />
           </aside>
 
           <div className="col-span-12 lg:col-span-8">
@@ -278,7 +257,7 @@ export default function Terminal() {
               className="rounded-3xl relative overflow-hidden"
               style={{
                 ...glassCardStyle(ACCENT),
-                padding: 'clamp(32px, 4vw, 56px)',
+                padding: 'clamp(20px, 2.4vw, 34px)',
               }}
             >
               <div
@@ -294,47 +273,30 @@ export default function Terminal() {
               />
 
               <div className="relative" style={{ zIndex: 1 }}>
-                <h2
-                  className="font-heading font-bold text-text-heading mb-6"
-                  style={{
-                    fontSize: 'clamp(1.5rem, 3.2vw, 2.125rem)',
-                    lineHeight: 1.18,
-                    maxWidth: 720,
-                  }}
-                >
-                  {databases.title}
-                </h2>
+                {databases.body.split('\n\n').map((para, i, arr) => (
+                  <p
+                    key={i}
+                    className="font-heading text-text-body"
+                    style={{
+                      fontSize: 'clamp(13px, 1.5vw, 15px)',
+                      lineHeight: '26px',
+                      maxWidth: 760,
+                      marginBottom: i === arr.length - 1 ? 0 : 18,
+                    }}
+                  >
+                    {renderBold(para)}
+                  </p>
+                ))}
 
-                <p
-                  className="font-heading text-text-body"
-                  style={{
-                    fontSize: 'clamp(13px, 1.5vw, 15px)',
-                    lineHeight: '26px',
-                    maxWidth: 760,
-                  }}
-                >
-                  {databases.body}
-                </p>
-
-                <PipelineStrip />
+                <ProvenanceConstellation />
               </div>
             </motion.div>
           </div>
 
-          <aside className="hidden lg:flex col-span-2 flex-col gap-4 justify-center">
-            <RailLabel align="right">Integrity Check</RailLabel>
-            <div className="flex flex-col gap-2">
-              {INTEGRITY.map(({ label, Icon }) => (
-                <IntegrityChip key={label} label={label} Icon={Icon} align="right" />
-              ))}
-            </div>
+          <aside className="hidden lg:flex col-span-2 flex-col gap-3 justify-center">
+            <RailLabel align="right">QC report</RailLabel>
+            <QcReportPreview />
           </aside>
-        </div>
-
-        <div className="lg:hidden flex flex-wrap gap-2 mt-4">
-          {INTEGRITY.map(({ label, Icon }) => (
-            <IntegrityChip key={label} label={label} Icon={Icon} />
-          ))}
         </div>
 
         <PullQuote>{databases.pullquote}</PullQuote>

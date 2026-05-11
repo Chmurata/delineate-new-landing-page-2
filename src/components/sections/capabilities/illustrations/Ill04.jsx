@@ -146,11 +146,14 @@ export default function Ill04({ active = true, className = '', id = 'ill04' }) {
       aria-label="Benchmark your asset against the class: scatter of competitor Phase 2 readouts inside a class noise envelope, with ASSET-X plotted as a differentiated outlier above and to the right."
       style={{ position: 'relative' }}
     >
-      {/* Card frame — Ill03 chrome standard */}
+      {/* Card frame — Ill03 chrome standard. inset matches the 6/480 viewBox inset used by Ill01/02/03/05/06 */}
       <div
         style={{
           position: 'absolute',
-          inset: 0,
+          top: '1.875%',
+          right: '1.25%',
+          bottom: '1.875%',
+          left: '1.25%',
           borderRadius: 14,
           background: 'rgba(8,12,24,0.35)',
           pointerEvents: 'none',

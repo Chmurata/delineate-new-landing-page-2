@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useRef, useState, useEffect, useLayoutEffect } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import Container from '../ui/Container'
 import CTAButton from '../ui/CTAButton'
@@ -8,7 +8,22 @@ import { caseStudies, hero } from '../../content'
 import { glassCardStyle } from '../../lib/glass'
 
 const ACCENT = '#7C9ED9'
+const PERI = '#7EB8FF'
 const AUTO_ADVANCE_MS = 3000
+
+// Keyframe injection (once, module-scope) — scoped pulse for the active tab indicator
+if (typeof document !== 'undefined' && !document.getElementById('cs-tab-indicator-keyframes')) {
+  const style = document.createElement('style')
+  style.id = 'cs-tab-indicator-keyframes'
+  style.textContent = `
+    @keyframes csTabPulse {
+      0%   { opacity: 0.95; }
+      50%  { opacity: 0.45; }
+      100% { opacity: 0.95; }
+    }
+  `
+  document.head.appendChild(style)
+}
 
 function ImagePlaceholder({ tag }) {
   return (
@@ -29,133 +44,180 @@ function ImagePlaceholder({ tag }) {
 
 export default function CaseStudies() {
   const [activeIdx, setActiveIdx] = useState(0)
-  const [progress, setProgress] = useState(0)
-  const timerRef = useRef(null)
-  const startRef = useRef(Date.now())
-  const item = caseStudies.items[activeIdx]
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 })
+  const rowRef = useRef(null)
+  const tabRefs = useRef([])
+  const indicatorRef = useRef(null)
+  const prefersReduce = useReducedMotion()
 
-  const startTimer = useCallback(() => {
-    startRef.current = Date.now()
-    setProgress(0)
-    if (timerRef.current) cancelAnimationFrame(timerRef.current)
-    const tick = () => {
-      const elapsed = Date.now() - startRef.current
-      const pct = Math.min(elapsed / AUTO_ADVANCE_MS, 1)
-      setProgress(pct)
-      if (pct >= 1) {
-        setActiveIdx(prev => (prev + 1) % caseStudies.items.length)
-      } else {
-        timerRef.current = requestAnimationFrame(tick)
-      }
-    }
-    timerRef.current = requestAnimationFrame(tick)
-  }, [])
-
+  // Auto-advance: simple setTimeout that resets on activeIdx change
   useEffect(() => {
-    startTimer()
-    return () => { if (timerRef.current) cancelAnimationFrame(timerRef.current) }
-  }, [activeIdx, startTimer])
+    if (prefersReduce) return
+    const id = setTimeout(() => {
+      setActiveIdx((i) => (i + 1) % caseStudies.items.length)
+    }, AUTO_ADVANCE_MS)
+    return () => clearTimeout(id)
+  }, [activeIdx, prefersReduce])
+
+  // Measure the active tab's left/width — re-run on activeIdx change AND on resize
+  useLayoutEffect(() => {
+    const measure = () => {
+      const row = rowRef.current
+      const el = tabRefs.current[activeIdx]
+      if (!row || !el) return
+      const rowRect = row.getBoundingClientRect()
+      const elRect = el.getBoundingClientRect()
+      setIndicator({ left: elRect.left - rowRect.left, width: elRect.width })
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [activeIdx])
+
+  // Restart the indicator's pulse keyframe on every tab change so the
+  // brightness oscillation stays in sync with the auto-advance cycle.
+  useEffect(() => {
+    const el = indicatorRef.current
+    if (!el || prefersReduce) return
+    el.style.animation = 'none'
+    // Force reflow so the browser restarts the animation
+    void el.offsetHeight
+    el.style.animation = `csTabPulse ${AUTO_ADVANCE_MS}ms ease-in-out infinite`
+  }, [activeIdx, prefersReduce])
 
   return (
     <Container>
-      <SectionHeading>{caseStudies.header}</SectionHeading>
+      <SectionHeading className="text-center">{caseStudies.header}</SectionHeading>
 
-      <div className="flex flex-col lg:flex-row gap-6 max-w-[min(960px,90vw)] mx-auto">
-        {/* Tabs — horizontal scroll on mobile, vertical sidebar on desktop */}
-        <div className="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-x-visible lg:w-[280px] flex-shrink-0 pb-2 lg:pb-0 scrollbar-hide">
-          {caseStudies.items.map((it, i) => (
-            <motion.button
-              key={i}
-              onClick={() => setActiveIdx(i)}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative overflow-hidden cursor-pointer outline-none text-left flex-shrink-0 rounded-[10px]"
-              style={{
-                ...glassCardStyle(ACCENT),
-                padding: 'clamp(12px, 2vw, 16px) clamp(14px, 2vw, 18px)',
-                border: activeIdx === i ? `0.5px solid ${ACCENT}30` : '0.5px solid rgba(100, 160, 230, 0.06)',
-                borderLeft: activeIdx === i ? `3px solid ${ACCENT}` : '3px solid transparent',
-                background: activeIdx === i ? 'rgba(8, 12, 24, 0.8)' : 'rgba(8, 12, 24, 0.55)',
-                minWidth: 200,
-              }}
-            >
-              <div className="font-body text-accent mb-1" style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', opacity: activeIdx === i ? 1 : 0.5 }}>
+      <div className="flex flex-col gap-6 max-w-[min(960px,90vw)] mx-auto">
+        {/* Tabs — concept B: tag-only labels, single sliding hairline indicator below */}
+        <div
+          ref={rowRef}
+          className="relative flex justify-center flex-wrap gap-x-7 gap-y-3 lg:gap-x-9 px-2"
+          style={{ paddingBottom: 10 }}
+        >
+          {caseStudies.items.map((it, i) => {
+            const isActive = i === activeIdx
+            return (
+              <button
+                key={i}
+                ref={(el) => (tabRefs.current[i] = el)}
+                onClick={() => setActiveIdx(i)}
+                className="cursor-pointer outline-none"
+                style={{
+                  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                  fontSize: 13,
+                  letterSpacing: '0.02em',
+                  textTransform: 'none',
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? PERI : `${PERI}80`,
+                  padding: '4px 2px',
+                  background: 'none',
+                  border: 'none',
+                  transition: 'color 220ms ease',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = `${PERI}CC` }}
+                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = `${PERI}80` }}
+              >
                 {it.tag}
-              </div>
-              <div className="font-heading text-sm leading-tight truncate max-w-[240px]" style={{ fontWeight: activeIdx === i ? 600 : 500, color: activeIdx === i ? '#FFFFFF' : '#9BA3A0' }}>
-                {it.title}
-              </div>
-              {/* Progress bar */}
-              <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded-b-[10px] overflow-hidden" style={{ background: `${ACCENT}15` }}>
-                <div style={{
-                  height: '100%', width: activeIdx === i ? `${progress * 100}%` : '0%',
-                  background: ACCENT, borderRadius: 1,
-                  opacity: activeIdx === i ? 1 : 0,
-                  transition: activeIdx === i ? 'opacity 0.15s' : 'opacity 0.25s, width 0s 0.25s',
-                }} />
-              </div>
-            </motion.button>
-          ))}
+              </button>
+            )
+          })}
+
+          {/* Full-width hairline rail */}
+          <div
+            aria-hidden="true"
+            className="absolute left-0 right-0 pointer-events-none"
+            style={{ bottom: 0, height: 1, background: `${PERI}22` }}
+          />
+
+          {/* Active sliding indicator — slides via CSS transition; pulse restarts via effect */}
+          <div
+            ref={indicatorRef}
+            aria-hidden="true"
+            className="absolute pointer-events-none"
+            style={{
+              bottom: 0,
+              left: indicator.left,
+              width: indicator.width,
+              height: 2,
+              background: PERI,
+              transition: 'left 380ms cubic-bezier(0.16, 1, 0.3, 1), width 380ms cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          />
         </div>
 
-        {/* Detail panel */}
-        <div className="flex-1 relative" style={{ minHeight: 'clamp(300px, 40vw, 360px)' }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIdx}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.25 }}
-              className="rounded-3xl h-full flex flex-col overflow-hidden"
-              style={{ ...glassCardStyle(ACCENT) }}
-            >
-              {/* Image */}
-              <div className="overflow-hidden" style={{ height: 'clamp(140px, 20vw, 180px)', background: 'linear-gradient(135deg, rgba(8, 12, 24, 0.9) 0%, rgba(20, 35, 70, 0.5) 100%)' }}>
-                {item.image ? (
-                  <img src={item.image} alt={item.imageAlt || item.title} className="w-full h-full object-cover" />
-                ) : (
-                  <ImagePlaceholder tag={item.tag} />
-                )}
-              </div>
+        {/* Detail panel — ONE shared card chrome on the outside; the 5 content variants
+            crossfade inside a CSS grid so their glass backgrounds don't stack on top of
+            each other during the transition (which was making the area brighter mid-fade). */}
+        <div className="rounded-3xl overflow-hidden" style={glassCardStyle(ACCENT)}>
+          <div style={{ display: 'grid' }}>
+            {caseStudies.items.map((it, i) => {
+              const isActive = i === activeIdx
+              return (
+                <motion.div
+                  key={i}
+                  initial={false}
+                  animate={{ opacity: isActive ? 1 : 0 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className="flex flex-col"
+                  style={{
+                    gridColumn: 1,
+                    gridRow: 1,
+                    pointerEvents: isActive ? 'auto' : 'none',
+                  }}
+                  aria-hidden={!isActive}
+                >
+                  {/* Image */}
+                  <div className="overflow-hidden" style={{ height: 'clamp(140px, 20vw, 180px)', background: 'linear-gradient(135deg, rgba(8, 12, 24, 0.9) 0%, rgba(20, 35, 70, 0.5) 100%)' }}>
+                    {it.image ? (
+                      <img src={it.image} alt={it.imageAlt || it.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <ImagePlaceholder tag={it.tag} />
+                    )}
+                  </div>
 
-              {/* Content */}
-              <div className="flex-1 flex flex-col gap-3" style={{ padding: 'clamp(16px, 3vw, 24px) clamp(20px, 3vw, 28px)' }}>
-                <h3 className="font-heading font-semibold text-text-heading" style={{ fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.3 }}>
-                  {item.title}
-                </h3>
-                <p className="font-body text-accent opacity-60" style={{ fontSize: 'clamp(11px, 1.3vw, 13px)' }}>
-                  {item.metrics}
-                </p>
-                {(item.paragraphs || [item.description]).filter(Boolean).map((para, pi) => (
-                  <p key={pi} className="font-heading text-text-body" style={{ fontSize: 'clamp(13px, 1.5vw, 15px)', lineHeight: '24px' }}>
-                    {para}
-                  </p>
-                ))}
+                  {/* Content */}
+                  <div className="flex-1 flex flex-col gap-3" style={{ padding: 'clamp(16px, 3vw, 24px) clamp(20px, 3vw, 28px)' }}>
+                    <h3 className="font-heading font-semibold text-text-heading" style={{ fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.3 }}>
+                      {it.title}
+                    </h3>
+                    <p className="font-body text-accent opacity-60" style={{ fontSize: 'clamp(11px, 1.3vw, 13px)' }}>
+                      {it.metrics}
+                    </p>
+                    {(it.paragraphs || [it.description]).filter(Boolean).map((para, pi) => (
+                      <p key={pi} className="font-heading text-text-body" style={{ fontSize: 'clamp(13px, 1.5vw, 15px)', lineHeight: '24px' }}>
+                        {para}
+                      </p>
+                    ))}
 
-                {item.readMoreHref && (
-                  <a
-                    href={item.readMoreHref}
-                    aria-disabled={item.readMoreHref === '#'}
-                    onClick={e => { if (item.readMoreHref === '#') e.preventDefault() }}
-                    className="inline-flex items-center gap-1.5 mt-2 font-body font-semibold transition-opacity duration-200"
-                    style={{
-                      color: ACCENT,
-                      fontSize: 'clamp(12px, 1.4vw, 13px)',
-                      letterSpacing: '0.3px',
-                      opacity: item.readMoreHref === '#' ? 0.55 : 1,
-                      cursor: item.readMoreHref === '#' ? 'not-allowed' : 'pointer',
-                      textDecoration: 'none',
-                      width: 'fit-content',
-                    }}
-                  >
-                    {caseStudies.readMoreLabel || 'Read more'}
-                    <ArrowRightIcon style={{ width: 12, height: 12, flexShrink: 0 }} />
-                  </a>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+                    {it.readMoreHref && (
+                      <a
+                        href={it.readMoreHref}
+                        aria-disabled={it.readMoreHref === '#'}
+                        onClick={e => { if (it.readMoreHref === '#') e.preventDefault() }}
+                        tabIndex={isActive ? 0 : -1}
+                        className="inline-flex items-center gap-1.5 mt-2 font-body font-semibold transition-opacity duration-200"
+                        style={{
+                          color: ACCENT,
+                          fontSize: 'clamp(12px, 1.4vw, 13px)',
+                          letterSpacing: '0.3px',
+                          opacity: it.readMoreHref === '#' ? 0.55 : 1,
+                          cursor: it.readMoreHref === '#' ? 'not-allowed' : 'pointer',
+                          textDecoration: 'none',
+                          width: 'fit-content',
+                        }}
+                      >
+                        {caseStudies.readMoreLabel || 'Read more'}
+                        <ArrowRightIcon style={{ width: 12, height: 12, flexShrink: 0 }} />
+                      </a>
+                    )}
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
         </div>
       </div>
 

@@ -21,6 +21,7 @@ export { default as Ill02 } from './Ill02.jsx'
 export { default as Ill03 } from './Ill03.jsx'
 export { default as Ill04 } from './Ill04.jsx'
 export { default as Ill05 } from './Ill05.jsx'
+export { default as Ill06 } from './Ill06.jsx'
 
 export const ILLUSTRATIONS = [
   { id: 'ill01', component: 'Ill01' },
@@ -28,6 +29,7 @@ export const ILLUSTRATIONS = [
   { id: 'ill03', component: 'Ill03' },
   { id: 'ill04', component: 'Ill04' },
   { id: 'ill05', component: 'Ill05' },
+  { id: 'ill06', component: 'Ill06' },
 ]
 
 export const ACCENT = '#7C9ED9'

@@ -37,7 +37,7 @@ export const clientBar = {
 
 export const capabilities = {
   header: 'What we do',
-  subheader: 'Five capabilities that take you from raw evidence to a defensible decision — go / no-go, dose selection, trial design, indication prioritization, and submission strategy.',
+  subheader: 'Six independent value streams — go / no-go, dose selection, trial design, indication prioritization, submission strategy, and the plot-digitization infrastructure that underpins all of them.',
   items: [
     {
       number: '01',
@@ -63,6 +63,11 @@ export const capabilities = {
       number: '05',
       title: 'Generate submission-ready outputs',
       description: 'We export model diagnostics, exposure-response plots, and indirect comparison frameworks formatted for FDA briefing documents, EMA scientific advice packages, and HTA value dossiers.',
+    },
+    {
+      number: '06',
+      title: 'Digitize published plots at scale',
+      description: 'We extract trial-level PK, efficacy, and safety data — including error bars and variance — directly from published figures at the granularity your model requires. Thousands of plots, QC\'d in days, anchoring databases that would take months by hand.',
     },
   ],
 }
@@ -91,9 +96,11 @@ export const audiences = {
 
 export const databases = {
   header: 'Fit-for-purpose database services',
-  title: 'Your model is only as good as the data behind it.',
-  body: 'For teams who want to do their own modeling, Delineate builds fit-for-purpose databases — assembled from source, rigorously QC\'d, and formatted precisely for your workflow. Dual independent extraction with formal arbitration, source-level verification against original documents, cross-study consistency checks for covariates and endpoints, systematic outlier flagging, and a full audit trail on every value — delivered with a structured QC report and in your exact required format, whether that\'s NONMEM, Monolix, Phoenix NLME, R / Python data frames, MBMA software-compatible structures, Excel workbooks with metadata sheets, or a bespoke client schema.',
-  pullquote: 'A pharmacometrics team that spends three weeks cleaning data before building a model has not spent three weeks doing pharmacometrics. Delineate gives those weeks back.',
+  title: 'Your decision is as good as the evidence\nthat supports it.',
+  body:
+    'For teams who want to do their own modeling, Delineate builds **fit-for-purpose databases** — assembled from source, rigorously QC\'d, and formatted precisely for your workflow.\n\n' +
+    'Dual independent extraction with formal arbitration, source-level verification against original documents, cross-study consistency checks for covariates and endpoints, systematic outlier flagging, and a full audit trail on every value — delivered with a structured QC report and in your exact required format, whether that\'s NONMEM, Monolix, Phoenix NLME, R / Python data frames, **MBMA** software-compatible structures, Excel workbooks with metadata sheets, or a bespoke client schema.',
+  pullquote: 'A pharmacometrics team that spends three weeks cleaning data before\nbuilding a model has not spent three weeks doing pharmacometrics.\nDelineate gives those weeks back.',
 }
 
 export const caseStudies = {
@@ -102,7 +109,7 @@ export const caseStudies = {
   items: [
     {
       title: 'Obesity drug database — MBMA for go / no-go',
-      tag: 'DOSE-RESPONSE',
+      tag: 'Dose–response',
       metrics: '300 clinical trials extracted · NONMEM-ready on delivery · Go / no-go decision supported',
       paragraphs: [
         'A biopharma company with a GLP-1 asset in late Phase 2 needed to quantify where their asset sat on the class-level exposure-response curve before committing to Phase 3. Internal estimate: 4–5 months of analyst time to build the cross-trial database.',
@@ -113,7 +120,7 @@ export const caseStudies = {
     },
     {
       title: 'ADC oncology — model decision engine',
-      tag: 'ONCOLOGY',
+      tag: 'Oncology',
       metrics: '15 approved ADCs · 3-analyte PopPK framework · Project Optimus–ready',
       paragraphs: [
         'The ADC competitive landscape is the hardest MBMA problem in oncology. Three analytes (intact ADC, total antibody, free payload) with distinct disposition. DAR heterogeneity drives clearance independently of TMDD. Bystander payloads decouple efficacy from target saturation. Standard PopPK frameworks for naked antibodies weren\'t designed for any of this.',
@@ -124,7 +131,7 @@ export const caseStudies = {
     },
     {
       title: 'Hybrid AI PK model — Sanofi',
-      tag: 'PHARMACOKINETICS',
+      tag: 'Pharmacokinetics',
       metrics: '900 publications screened · 4,000+ PK plots digitized · 23,000+ data points extracted',
       paragraphs: [
         'Sanofi had a hybrid-AI PK model architecture ready but no scalable pathway to build a training corpus of the required scale. Manual digitization was too slow; commercial databases lacked the granularity and format alignment the AI pipeline required.',
@@ -146,7 +153,7 @@ export const caseStudies = {
     },
     {
       title: 'Surrogate endpoint database — Critical Path Institute',
-      tag: 'REGULATORY',
+      tag: 'Regulatory',
       metrics: '1,000s of studies AI-screened · 200+ publications digitized · Regulatory-grade evidence package',
       paragraphs: [
         'Establishing a surrogate endpoint for regulatory use requires demonstrating, across the totality of clinical evidence, that the proposed surrogate reliably predicts the clinical outcome of interest. For type 1 diabetes, this meant assembling and modeling a comprehensive database spanning decades of trial data — demanding both the breadth of a systematic literature review and the analytical rigor of a quantitative MBMA.',
