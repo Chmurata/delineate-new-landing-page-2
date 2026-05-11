@@ -4,7 +4,6 @@ import PreloaderAnimation from './components/background/PreloaderAnimation'
 import CinematicBg from './components/background/CinematicBg'
 import ScrollCells from './components/background/ScrollCells'
 import Navbar from './components/layout/Navbar'
-import LayoutSwitcher from './components/layout/LayoutSwitcher'
 import HeroSection from './components/hero/HeroSection'
 import SocialProof from './components/sections/SocialProof'
 import useActiveSection from './hooks/useActiveSection'
@@ -65,9 +64,6 @@ export default function App() {
 
       {/* Navbar */}
       <Navbar scrollToSection={scrollToSection} />
-
-      {/* Layout switcher (FAB) */}
-      <LayoutSwitcher />
 
       {/* Hero */}
       <SectionWrap id="hero" sectionRef={sectionRefs.hero}>
