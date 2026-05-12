@@ -76,7 +76,7 @@ function NonmemPreview() {
       <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
         <span
           style={{
-            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontFamily: 'Inter, system-ui, sans-serif',
             fontSize: 9,
             color: PERI,
             opacity: 0.85,
@@ -88,7 +88,7 @@ function NonmemPreview() {
         </span>
         <span
           style={{
-            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontFamily: 'Inter, system-ui, sans-serif',
             fontSize: 8,
             color: PERI,
             opacity: 0.45,
@@ -100,7 +100,7 @@ function NonmemPreview() {
       <div style={{ height: 1, background: `${PERI}22`, marginBottom: 6 }} />
       <div
         style={{
-          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          fontFamily: 'Inter, system-ui, sans-serif',
           fontSize: 9,
           lineHeight: '14px',
         }}
@@ -141,7 +141,7 @@ function QcReportPreview() {
       <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
         <span
           style={{
-            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontFamily: 'Inter, system-ui, sans-serif',
             fontSize: 9,
             color: PERI,
             opacity: 0.85,
@@ -153,7 +153,7 @@ function QcReportPreview() {
         </span>
         <span
           style={{
-            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontFamily: 'Inter, system-ui, sans-serif',
             fontSize: 8,
             color: PERI,
             opacity: 0.45,
@@ -165,7 +165,7 @@ function QcReportPreview() {
       <div style={{ height: 1, background: `${PERI}22`, marginBottom: 6 }} />
       <div
         style={{
-          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          fontFamily: 'Inter, system-ui, sans-serif',
           fontSize: 9.5,
           lineHeight: '16px',
         }}

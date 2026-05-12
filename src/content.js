@@ -5,9 +5,11 @@
 
 export const hero = {
   headline: {
-    line1: 'Turn all available evidence into a',
-    line2: 'quantitative foundation',
-    line3: 'for your most consequential decisions.',
+    // Line 1 is rendered as two emphasis spans so we can highlight the
+    // "All available evidence" lead and let the rest sit slightly muted.
+    line1Lead: 'All available evidence',
+    line1Tail: 'into a quantitative foundation',
+    line2: 'for your most consequential decisions.',
     sub: 'Delineate creates models from the totality of available evidence — in any therapeutic area — so your development, regulatory, and commercial teams act on quantitative evidence insights in a fraction of the time.',
   },
 
@@ -23,7 +25,7 @@ export const hero = {
     secondary: 'Talk to Our Data Team',
   },
 
-  nav: ['What we do', 'Who we support', 'Databases', 'Case studies'],
+  nav: ['What we do', 'Who we support', 'Case studies'],
 }
 
 export const clientBar = {
@@ -41,31 +43,37 @@ export const capabilities = {
   items: [
     {
       number: '01',
+      shortLabel: 'Assemble evidence',
       title: 'Assemble & structure the evidence',
       description: 'We extract and structure FDA clinical pharmacology reviews, EMA EPARs, published literature, AdCom briefing documents, and postmarket commitments into a queryable database across any drug class — so the cross-asset evidence base is ready before modeling begins.',
     },
     {
       number: '02',
+      shortLabel: 'Model & simulate',
       title: 'Model & simulate across the totality of evidence',
       description: 'We synthesize the evidence into quantitative predictions — across any combination of agents, indications, patient subgroups, and endpoints — in hours, not months. The basis for go / no-go decisions before committing Phase 3 resources.',
     },
     {
       number: '03',
+      shortLabel: 'Optimize dose',
       title: 'Optimize dose against the benefit-risk curve',
       description: 'We characterize efficacy and toxicity curves across the full evidence base, identifying the dose that captures achievable efficacy while staying on the right side of the toxicity curve — aligned with FDA Project Optimus expectations.',
     },
     {
       number: '04',
+      shortLabel: 'Benchmark asset',
       title: 'Benchmark your asset against the class',
       description: 'We overlay your Phase 1/2 PK and efficacy data on the class-level exposure-response landscape, so you know whether your signal is genuinely differentiated — or within the noise of what the class already delivers. The basis for trial design and control arm modeling anchored to the competitor evidence base, not a single study.',
     },
     {
       number: '05',
+      shortLabel: 'Submission outputs',
       title: 'Generate submission-ready outputs',
       description: 'We export model diagnostics, exposure-response plots, and indirect comparison frameworks formatted for FDA briefing documents, EMA scientific advice packages, and HTA value dossiers.',
     },
     {
       number: '06',
+      shortLabel: 'Digitize plots',
       title: 'Digitize published plots at scale',
       description: 'We extract trial-level PK, efficacy, and safety data — including error bars and variance — directly from published figures at the granularity your model requires. Thousands of plots, QC\'d in days, anchoring databases that would take months by hand.',
     },
@@ -105,11 +113,21 @@ export const databases = {
 
 export const caseStudies = {
   header: 'Case studies',
+  intro:
+    'Delineate builds fit-for-purpose databases — assembled from source, rigorously QC\'d, and formatted precisely for your workflow.',
+  guaranteeLabel: 'Every dataset includes',
+  guarantees: [
+    'Dual independent extraction with formal arbitration',
+    'Source-level verification against original documents',
+    'Cross-study consistency checks for covariates and endpoints',
+    'Systematic outlier flagging with documented rationale',
+    'Full audit trail on every value within Delineate platform',
+  ],
   readMoreLabel: 'Read more',
   items: [
     {
       title: 'Obesity drug database — MBMA for go / no-go',
-      tag: 'Dose–response',
+      tag: 'Obesity Drug Database',
       metrics: '300 clinical trials extracted · NONMEM-ready on delivery · Go / no-go decision supported',
       paragraphs: [
         'A biopharma company with a GLP-1 asset in late Phase 2 needed to quantify where their asset sat on the class-level exposure-response curve before committing to Phase 3. Internal estimate: 4–5 months of analyst time to build the cross-trial database.',
@@ -120,7 +138,7 @@ export const caseStudies = {
     },
     {
       title: 'ADC oncology — model decision engine',
-      tag: 'Oncology',
+      tag: 'ADC Database',
       metrics: '15 approved ADCs · 3-analyte PopPK framework · Project Optimus–ready',
       paragraphs: [
         'The ADC competitive landscape is the hardest MBMA problem in oncology. Three analytes (intact ADC, total antibody, free payload) with distinct disposition. DAR heterogeneity drives clearance independently of TMDD. Bystander payloads decouple efficacy from target saturation. Standard PopPK frameworks for naked antibodies weren\'t designed for any of this.',
@@ -131,7 +149,7 @@ export const caseStudies = {
     },
     {
       title: 'Hybrid AI PK model — Sanofi',
-      tag: 'Pharmacokinetics',
+      tag: 'Hybrid AI PK Model',
       metrics: '900 publications screened · 4,000+ PK plots digitized · 23,000+ data points extracted',
       paragraphs: [
         'Sanofi had a hybrid-AI PK model architecture ready but no scalable pathway to build a training corpus of the required scale. Manual digitization was too slow; commercial databases lacked the granularity and format alignment the AI pipeline required.',
@@ -142,7 +160,7 @@ export const caseStudies = {
     },
     {
       title: 'Pipeline intelligence database — BD & licensing',
-      tag: 'BD&L',
+      tag: 'Pipeline Intelligence Database',
       metrics: 'Multi-year congress mining · Structured CI database · 10 days to full competitive view',
       paragraphs: [
         'A BD&L team evaluating a time-pressured in-licensing opportunity needed a structured view of the competitive landscape — but key data on pipeline assets was scattered across multi-year congress proceedings, abstract books, investor presentations, and press releases.',
@@ -153,7 +171,7 @@ export const caseStudies = {
     },
     {
       title: 'Surrogate endpoint database — Critical Path Institute',
-      tag: 'Regulatory',
+      tag: 'Surrogate Endpoint Database',
       metrics: '1,000s of studies AI-screened · 200+ publications digitized · Regulatory-grade evidence package',
       paragraphs: [
         'Establishing a surrogate endpoint for regulatory use requires demonstrating, across the totality of clinical evidence, that the proposed surrogate reliably predicts the clinical outcome of interest. For type 1 diabetes, this meant assembling and modeling a comprehensive database spanning decades of trial data — demanding both the breadth of a systematic literature review and the analytical rigor of a quantitative MBMA.',

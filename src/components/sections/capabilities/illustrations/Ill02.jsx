@@ -344,7 +344,7 @@ export default function Ill02({ active = false, className = '', id = 'ill02' }) 
         />
 
         {/* 7. Data-rain glyphs — CSS keyframe fall, paused until active+inView */}
-        <g fontFamily="'Roboto Mono', 'SF Mono', monospace" fontWeight={600}>
+        <g fontFamily="Inter, system-ui, sans-serif" fontWeight={600}>
           {DATA_GLYPHS.map((g, i) => (
             <text
               key={i}

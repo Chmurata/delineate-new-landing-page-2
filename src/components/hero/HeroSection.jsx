@@ -49,38 +49,48 @@ export default function HeroSection() {
         <div
           className="flex flex-col gap-6 text-center xl:text-left"
           style={{
-            maxWidth: 648,
+            maxWidth: 720,
             width: '100%',
             pointerEvents: 'auto',
           }}
         >
-          {/* Headline — 3 separate h1s on desktop (for SplitText), single flowing h1 on mobile */}
+          {/* Headline — 2 lines: line 1 has emphasis-split, line 2 uses accent color */}
           {isDesktop ? (
             <div>
-              <h1 className="font-heading font-bold text-text-heading" style={{ fontSize: 40, lineHeight: '60px', margin: 0 }}>
-                <SplitText staggerDelay={0.02} duration={0.35}>{hero.headline.line1}</SplitText>
+              <h1
+                className="font-heading text-text-heading"
+                style={{ fontSize: 32, lineHeight: '46px', margin: 0, textWrap: 'balance' }}
+              >
+                <span style={{ fontWeight: 800 }}>
+                  <SplitText staggerDelay={0.02} duration={0.35}>{hero.headline.line1Lead}</SplitText>
+                </span>
+                {' '}
+                <span style={{ fontWeight: 500, opacity: 0.78 }}>
+                  <SplitText delay={0.35} staggerDelay={0.02} duration={0.35}>{hero.headline.line1Tail}</SplitText>
+                </span>
               </h1>
-              <h1 className="font-heading font-bold text-text-heading" style={{ fontSize: 40, lineHeight: '60px', margin: 0 }}>
-                <SplitText delay={0.4} staggerDelay={0.02} duration={0.35}>{hero.headline.line2}</SplitText>
-              </h1>
-              <h1 className="font-heading font-bold" style={{ fontSize: 40, lineHeight: '60px', margin: 0, color: ACCENT }}>
-                <SplitText delay={0.8} staggerDelay={0.02} duration={0.35}>{hero.headline.line3}</SplitText>
+              <h1
+                className="font-heading font-bold"
+                style={{ fontSize: 32, lineHeight: '46px', margin: 0, color: ACCENT, textWrap: 'balance' }}
+              >
+                <SplitText delay={0.7} staggerDelay={0.02} duration={0.35}>{hero.headline.line2}</SplitText>
               </h1>
             </div>
           ) : (
             <h1
-              className="font-heading font-bold text-text-heading"
-              style={{ fontSize: 'clamp(1.5rem, 6vw, 2.25rem)', lineHeight: 1.3, margin: 0 }}
+              className="font-heading text-text-heading"
+              style={{ fontSize: 'clamp(1.4rem, 5.6vw, 2rem)', lineHeight: 1.3, margin: 0, textWrap: 'balance' }}
             >
-              {hero.headline.line1} {hero.headline.line2}{' '}
-              <span style={{ color: ACCENT }}>{hero.headline.line3}</span>
+              <span style={{ fontWeight: 800 }}>{hero.headline.line1Lead}</span>{' '}
+              <span style={{ fontWeight: 500, opacity: 0.78 }}>{hero.headline.line1Tail}</span>{' '}
+              <span style={{ color: ACCENT, fontWeight: 700 }}>{hero.headline.line2}</span>
             </h1>
           )}
 
           {/* Subtitle */}
           <motion.p
             className="font-heading"
-            style={{ fontSize: 'clamp(0.8rem, 1.5vw, 16px)', lineHeight: '22px', color: '#B4B7B2', margin: 0 }}
+            style={{ fontSize: 'clamp(0.8rem, 1.5vw, 16px)', lineHeight: '22px', color: '#B4B7B2', margin: 0, maxWidth: 520 }}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: isDesktop ? 1.2 : 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}

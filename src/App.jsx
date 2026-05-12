@@ -10,13 +10,12 @@ import useActiveSection from './hooks/useActiveSection'
 
 const Capabilities = lazy(() => import('./components/sections/Capabilities'))
 const Audiences = lazy(() => import('./components/sections/Audiences'))
-const Databases = lazy(() => import('./components/sections/Databases'))
 const CaseStudies = lazy(() => import('./components/sections/CaseStudies'))
 const ClosingCTA = lazy(() => import('./components/sections/ClosingCTA'))
 const Footer = lazy(() => import('./components/layout/Footer'))
 
 const BASE = '#020B0F'
-const SECTION_IDS = ['hero', 'socialproof', 'capabilities', 'audiences', 'databases', 'casestudies', 'closing']
+const SECTION_IDS = ['hero', 'socialproof', 'capabilities', 'audiences', 'casestudies', 'closing']
 
 function SectionWrap({ id, sectionRef, children, className = '' }) {
   return (
@@ -83,10 +82,6 @@ export default function App() {
 
           <SectionWrap id="audiences" sectionRef={sectionRefs.audiences} className="py-[clamp(3rem,6vw,5rem)]">
             <Audiences />
-          </SectionWrap>
-
-          <SectionWrap id="databases" sectionRef={sectionRefs.databases} className="py-[clamp(3rem,6vw,5rem)]">
-            <Databases />
           </SectionWrap>
 
           <SectionWrap id="casestudies" sectionRef={sectionRefs.casestudies} className="py-[clamp(3rem,6vw,5rem)]">

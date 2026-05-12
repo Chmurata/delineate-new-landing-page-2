@@ -368,7 +368,7 @@ function DataRain() {
             key={i}
             style={{
               position: 'absolute', left: `${d.x}%`, top: 0,
-              fontSize: d.size, fontFamily: "'Roboto Mono', 'SF Mono', monospace",
+              fontSize: d.size, fontFamily: "Inter, system-ui, sans-serif",
               fontWeight: 600, color: NEON_BLUE, letterSpacing: 0.5,
               textShadow: `0 0 8px ${NEON_BLUE}60, 0 0 16px ${NEON_BLUE}30`,
               '--d-dist': `${d.dist}px`, '--d-o': d.opacity,

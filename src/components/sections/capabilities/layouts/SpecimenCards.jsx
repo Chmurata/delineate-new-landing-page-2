@@ -1,27 +1,41 @@
+import { useState } from 'react'
 import Container from '../../../ui/Container'
 import { capabilities } from '../../../../content'
 import { glassCardStyle } from '../../../../lib/glass'
 import { Ill01, Ill02, Ill03, Ill04, Ill05, Ill06 } from '../illustrations'
 
 const ILLUSTRATIONS = [Ill01, Ill02, Ill03, Ill04, Ill05, Ill06]
-
-const NUMERAL_GRADIENT =
-  'linear-gradient(90deg, #5B7FBF, #7C9ED9, #A8C4E8, #B8D4F0, #7C9ED9, #5B7FBF, #7C9ED9)'
+const PERI = '#7EB8FF'
 
 function SpecimenCard({ item, index }) {
   const Illustration = ILLUSTRATIONS[index] ?? null
   const illId = `ill${item.number}`
+  const [hover, setHover] = useState(false)
 
   return (
     <div
       className="rounded-3xl overflow-hidden flex flex-col h-full"
-      style={glassCardStyle()}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        ...glassCardStyle(),
+        border: `1px solid rgba(126, 184, 255, ${hover ? 0.28 : 0.12})`,
+        boxShadow: hover
+          ? '0 18px 38px -22px rgba(126, 184, 255, 0.35), 0 1px 0 rgba(126, 184, 255, 0.08) inset'
+          : '0 1px 0 rgba(126, 184, 255, 0.06) inset',
+        transform: hover ? 'translateY(-2px)' : 'translateY(0)',
+        transition: 'transform 260ms cubic-bezier(0.16, 1, 0.3, 1), border-color 260ms ease, box-shadow 260ms ease, background 260ms ease',
+      }}
     >
       {/* Illustration — inset block with its own 16px radius */}
       <div style={{ padding: '10px 10px 0 10px' }}>
         <div
           className="relative overflow-hidden w-full"
-          style={{ aspectRatio: '3 / 2', borderRadius: 16 }}
+          style={{
+            aspectRatio: '3 / 2',
+            borderRadius: 16,
+            border: '1px solid rgba(126, 184, 255, 0.07)',
+          }}
           aria-hidden={Illustration ? undefined : 'true'}
         >
           {Illustration ? (
@@ -35,19 +49,6 @@ function SpecimenCard({ item, index }) {
         className="flex-1 flex flex-col gap-2"
         style={{ padding: 'clamp(18px, 1.8vw, 24px) clamp(18px, 1.8vw, 24px) clamp(20px, 2vw, 26px)' }}
       >
-        <div
-          className="font-heading font-extrabold leading-none"
-          style={{
-            fontSize: 'clamp(22px, 2.2vw, 30px)',
-            background: NUMERAL_GRADIENT,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            marginBottom: 4,
-          }}
-        >
-          {item.number}
-        </div>
         <h3
           className="font-heading font-semibold text-text-heading"
           style={{
@@ -91,7 +92,7 @@ export default function SpecimenCards() {
           </h2>
           <p
             className="font-heading text-text-body mx-auto"
-            style={{ fontSize: 'clamp(14px, 1.6vw, 16px)', maxWidth: 720 }}
+            style={{ fontSize: 'clamp(14px, 1.6vw, 16px)', maxWidth: 920, textWrap: 'balance' }}
           >
             {capabilities.subheader}
           </p>

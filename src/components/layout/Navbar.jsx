@@ -98,7 +98,7 @@ export default function Navbar({ scrollToSection }) {
 
         {/* Desktop CTA */}
         <div className="hidden lg:block">
-          <CTAButton variant="ghost">{hero.cta.primary}</CTAButton>
+          <CTAButton variant="primary">{hero.cta.primary}</CTAButton>
         </div>
 
         {/* Mobile hamburger */}

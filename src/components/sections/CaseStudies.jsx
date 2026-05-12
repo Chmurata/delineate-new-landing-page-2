@@ -1,28 +1,46 @@
-import { useRef, useState, useEffect, useLayoutEffect } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { useRef, useState, useLayoutEffect } from 'react'
+import { motion } from 'framer-motion'
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
+import {
+  CheckCircle,
+  MagnifyingGlass,
+  LinkSimple,
+  Flag,
+  ShieldCheck,
+} from '@phosphor-icons/react'
 import Container from '../ui/Container'
-import CTAButton from '../ui/CTAButton'
 import SectionHeading from '../ui/SectionHeading'
-import { caseStudies, hero } from '../../content'
+import { caseStudies } from '../../content'
 import { glassCardStyle } from '../../lib/glass'
 
 const ACCENT = '#7C9ED9'
 const PERI = '#7EB8FF'
-const AUTO_ADVANCE_MS = 3000
 
-// Keyframe injection (once, module-scope) — scoped pulse for the active tab indicator
-if (typeof document !== 'undefined' && !document.getElementById('cs-tab-indicator-keyframes')) {
-  const style = document.createElement('style')
-  style.id = 'cs-tab-indicator-keyframes'
-  style.textContent = `
-    @keyframes csTabPulse {
-      0%   { opacity: 0.95; }
-      50%  { opacity: 0.45; }
-      100% { opacity: 0.95; }
-    }
-  `
-  document.head.appendChild(style)
+const GUARANTEE_ICONS = [CheckCircle, MagnifyingGlass, LinkSimple, Flag, ShieldCheck]
+
+function GuaranteeCard({ text, Icon, index }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ delay: 0.06 * index, duration: 0.45 }}
+      className="rounded-xl flex flex-col gap-3 h-full"
+      style={{
+        ...glassCardStyle(ACCENT),
+        padding: '14px 14px 12px',
+        border: '1px solid rgba(126, 184, 255, 0.10)',
+      }}
+    >
+      <Icon size={18} color={PERI} weight="thin" />
+      <p
+        className="font-heading text-text-heading"
+        style={{ fontSize: 12.5, lineHeight: '18px', fontWeight: 500, textWrap: 'balance' }}
+      >
+        {text}
+      </p>
+    </motion.div>
+  )
 }
 
 function ImagePlaceholder({ tag }) {
@@ -44,22 +62,11 @@ function ImagePlaceholder({ tag }) {
 
 export default function CaseStudies() {
   const [activeIdx, setActiveIdx] = useState(0)
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 })
+  const [indicator, setIndicator] = useState({ left: 0, top: 0, width: 0 })
   const rowRef = useRef(null)
   const tabRefs = useRef([])
-  const indicatorRef = useRef(null)
-  const prefersReduce = useReducedMotion()
 
-  // Auto-advance: simple setTimeout that resets on activeIdx change
-  useEffect(() => {
-    if (prefersReduce) return
-    const id = setTimeout(() => {
-      setActiveIdx((i) => (i + 1) % caseStudies.items.length)
-    }, AUTO_ADVANCE_MS)
-    return () => clearTimeout(id)
-  }, [activeIdx, prefersReduce])
-
-  // Measure the active tab's left/width — re-run on activeIdx change AND on resize
+  // Measure the active tab's left/top/width — handles wrapped rows
   useLayoutEffect(() => {
     const measure = () => {
       const row = rowRef.current
@@ -67,34 +74,64 @@ export default function CaseStudies() {
       if (!row || !el) return
       const rowRect = row.getBoundingClientRect()
       const elRect = el.getBoundingClientRect()
-      setIndicator({ left: elRect.left - rowRect.left, width: elRect.width })
+      setIndicator({
+        left: elRect.left - rowRect.left,
+        top: elRect.bottom - rowRect.top + 4,
+        width: elRect.width,
+      })
     }
     measure()
     window.addEventListener('resize', measure)
     return () => window.removeEventListener('resize', measure)
   }, [activeIdx])
 
-  // Restart the indicator's pulse keyframe on every tab change so the
-  // brightness oscillation stays in sync with the auto-advance cycle.
-  useEffect(() => {
-    const el = indicatorRef.current
-    if (!el || prefersReduce) return
-    el.style.animation = 'none'
-    // Force reflow so the browser restarts the animation
-    void el.offsetHeight
-    el.style.animation = `csTabPulse ${AUTO_ADVANCE_MS}ms ease-in-out infinite`
-  }, [activeIdx, prefersReduce])
-
   return (
     <Container>
-      <SectionHeading className="text-center">{caseStudies.header}</SectionHeading>
+      <SectionHeading className="text-center !mb-6">{caseStudies.header}</SectionHeading>
+
+      {/* Intro blurb — relocated from the removed Databases section */}
+      <p
+        className="font-heading text-text-body mx-auto text-center"
+        style={{
+          fontSize: 'clamp(14px, 1.4vw, 16px)',
+          lineHeight: 1.55,
+          maxWidth: 720,
+          marginBottom: 28,
+          opacity: 0.9,
+        }}
+      >
+        {caseStudies.intro}
+      </p>
+
+      {/* Every dataset includes: — 5 mini guarantee cards */}
+      <div className="mx-auto" style={{ maxWidth: 'min(1320px, 94vw)', marginBottom: 56 }}>
+        <div
+          className="text-center font-body"
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            color: PERI,
+            opacity: 0.7,
+            marginBottom: 14,
+          }}
+        >
+          {caseStudies.guaranteeLabel}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {caseStudies.guarantees.map((text, i) => (
+            <GuaranteeCard key={i} text={text} Icon={GUARANTEE_ICONS[i]} index={i} />
+          ))}
+        </div>
+      </div>
 
       <div className="flex flex-col gap-6 max-w-[min(960px,90vw)] mx-auto">
         {/* Tabs — concept B: tag-only labels, single sliding hairline indicator below */}
         <div
           ref={rowRef}
-          className="relative flex justify-center flex-wrap gap-x-7 gap-y-3 lg:gap-x-9 px-2"
-          style={{ paddingBottom: 10 }}
+          className="relative flex justify-center flex-wrap gap-x-6 gap-y-4 lg:gap-x-8 px-2"
+          style={{ paddingBottom: 14 }}
         >
           {caseStudies.items.map((it, i) => {
             const isActive = i === activeIdx
@@ -104,10 +141,10 @@ export default function CaseStudies() {
                 ref={(el) => (tabRefs.current[i] = el)}
                 onClick={() => setActiveIdx(i)}
                 className="cursor-pointer outline-none"
+                className="font-heading"
                 style={{
-                  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                  fontSize: 13,
-                  letterSpacing: '0.02em',
+                  fontSize: 14,
+                  letterSpacing: '-0.005em',
                   textTransform: 'none',
                   fontWeight: isActive ? 600 : 500,
                   color: isActive ? PERI : `${PERI}80`,
@@ -125,25 +162,18 @@ export default function CaseStudies() {
             )
           })}
 
-          {/* Full-width hairline rail */}
+          {/* Active sliding indicator — tracks the active tab even when the row wraps */}
           <div
-            aria-hidden="true"
-            className="absolute left-0 right-0 pointer-events-none"
-            style={{ bottom: 0, height: 1, background: `${PERI}22` }}
-          />
-
-          {/* Active sliding indicator — slides via CSS transition; pulse restarts via effect */}
-          <div
-            ref={indicatorRef}
             aria-hidden="true"
             className="absolute pointer-events-none"
             style={{
-              bottom: 0,
+              top: indicator.top,
               left: indicator.left,
               width: indicator.width,
               height: 2,
               background: PERI,
-              transition: 'left 380ms cubic-bezier(0.16, 1, 0.3, 1), width 380ms cubic-bezier(0.16, 1, 0.3, 1)',
+              transition:
+                'left 380ms cubic-bezier(0.16, 1, 0.3, 1), top 380ms cubic-bezier(0.16, 1, 0.3, 1), width 380ms cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           />
         </div>
@@ -221,10 +251,6 @@ export default function CaseStudies() {
         </div>
       </div>
 
-      {/* CTA #2 — same Neon Glow style as hero */}
-      <div className="flex justify-center mt-12">
-        <CTAButton variant="primary">{hero.cta.primary}</CTAButton>
-      </div>
     </Container>
   )
 }

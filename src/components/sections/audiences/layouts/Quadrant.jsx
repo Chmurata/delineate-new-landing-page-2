@@ -16,26 +16,27 @@ function AudienceCard({ item, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ delay: index * 0.08, duration: 0.5 }}
-      className="rounded-2xl flex items-center gap-5"
-      style={{ ...glassCardStyle(ACCENT), padding: 'clamp(20px, 2.5vw, 28px)' }}
+      className="rounded-2xl flex flex-col gap-4 h-full"
+      style={{
+        ...glassCardStyle(ACCENT),
+        padding: 'clamp(20px, 2vw, 26px)',
+        border: '1px solid rgba(126, 184, 255, 0.10)',
+      }}
     >
-      <div
-        className="flex-shrink-0"
-        style={{ width: 'clamp(72px, 9vw, 96px)', height: 'clamp(72px, 9vw, 96px)' }}
-      >
+      <div style={{ width: 'clamp(64px, 6vw, 80px)', height: 'clamp(64px, 6vw, 80px)' }}>
         {Glyph ? <Glyph /> : null}
       </div>
 
-      <div className="flex-1 min-w-0 flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <h3
           className="font-heading font-semibold text-text-heading"
-          style={{ fontSize: 'clamp(15px, 1.8vw, 17px)', lineHeight: '24px' }}
+          style={{ fontSize: 'clamp(15px, 1.4vw, 17px)', lineHeight: 1.3 }}
         >
           {item.title}
         </h3>
         <p
           className="font-heading text-text-body"
-          style={{ fontSize: 'clamp(12px, 1.5vw, 13px)', lineHeight: '21px' }}
+          style={{ fontSize: 'clamp(12px, 1vw, 13px)', lineHeight: '20px', opacity: 0.85 }}
         >
           {item.description}
         </p>
@@ -51,7 +52,7 @@ export default function Quadrant() {
         {audiences.header}
       </SectionHeading>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-[min(880px,92vw)] mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[min(1240px,94vw)] mx-auto">
         {audiences.items.map((item, i) => (
           <AudienceCard key={item.title} item={item} index={i} />
         ))}
