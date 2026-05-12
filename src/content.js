@@ -8,8 +8,8 @@ export const hero = {
     // Line 1 is rendered as two emphasis spans so we can highlight the
     // "All available evidence" lead and let the rest sit slightly muted.
     line1Lead: 'All available evidence',
-    line1Tail: 'into a quantitative foundation',
-    line2: 'for your most consequential decisions.',
+    line1Tail: 'in a single quantitative framework',
+    line2: 'for your most consequential decisions',
     sub: 'Delineate creates models from the totality of available evidence\n— in any therapeutic area — so your development, regulatory, and commercial teams\nact on quantitative evidence insights in a fraction of the time.',
   },
 
