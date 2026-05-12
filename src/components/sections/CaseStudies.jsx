@@ -12,30 +12,34 @@ import Container from '../ui/Container'
 import SectionHeading from '../ui/SectionHeading'
 import { caseStudies } from '../../content'
 import { glassCardStyle } from '../../lib/glass'
+import { Cs01, Cs02, Cs03, Cs04, Cs05 } from './case-studies/illustrations'
+
+const CASE_STUDY_ILLUSTRATIONS = [Cs01, Cs02, Cs03, Cs04, Cs05]
 
 const ACCENT = '#7C9ED9'
 const PERI = '#7EB8FF'
 
 const GUARANTEE_ICONS = [CheckCircle, MagnifyingGlass, LinkSimple, Flag, ShieldCheck]
 
-function GuaranteeCard({ text, Icon, index }) {
+function GuaranteeCell({ text, Icon, index, isLast }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ delay: 0.06 * index, duration: 0.45 }}
-      className="rounded-xl flex flex-col gap-3 h-full"
+      transition={{ delay: 0.05 * index, duration: 0.4 }}
+      className={`flex items-center gap-3 flex-1 min-w-0 ${
+        isLast ? '' : 'border-b lg:border-b-0 lg:border-r'
+      }`}
       style={{
-        ...glassCardStyle(ACCENT),
-        padding: '14px 14px 12px',
-        border: '1px solid rgba(126, 184, 255, 0.10)',
+        padding: '14px 18px',
+        borderColor: 'rgba(126, 184, 255, 0.10)',
       }}
     >
-      <Icon size={18} color={PERI} weight="thin" />
+      <Icon size={18} color={PERI} weight="thin" style={{ flexShrink: 0 }} />
       <p
         className="font-heading text-text-heading"
-        style={{ fontSize: 12.5, lineHeight: '18px', fontWeight: 500, textWrap: 'balance' }}
+        style={{ fontSize: 12.5, lineHeight: '17px', fontWeight: 500, textWrap: 'balance' }}
       >
         {text}
       </p>
@@ -103,25 +107,24 @@ export default function CaseStudies() {
         {caseStudies.intro}
       </p>
 
-      {/* Every dataset includes: — 5 mini guarantee cards */}
+      {/* Consolidated guarantee table strip */}
       <div className="mx-auto" style={{ maxWidth: 'min(1320px, 94vw)', marginBottom: 56 }}>
         <div
-          className="text-center font-body"
+          className="rounded-xl flex flex-col lg:flex-row"
           style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: PERI,
-            opacity: 0.7,
-            marginBottom: 14,
+            ...glassCardStyle(ACCENT),
+            border: '1px solid rgba(126, 184, 255, 0.12)',
+            overflow: 'hidden',
           }}
         >
-          {caseStudies.guaranteeLabel}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {caseStudies.guarantees.map((text, i) => (
-            <GuaranteeCard key={i} text={text} Icon={GUARANTEE_ICONS[i]} index={i} />
+            <GuaranteeCell
+              key={i}
+              text={text}
+              Icon={GUARANTEE_ICONS[i]}
+              index={i}
+              isLast={i === caseStudies.guarantees.length - 1}
+            />
           ))}
         </div>
       </div>
@@ -199,10 +202,21 @@ export default function CaseStudies() {
                   }}
                   aria-hidden={!isActive}
                 >
-                  {/* Image */}
-                  <div className="overflow-hidden" style={{ height: 'clamp(140px, 20vw, 180px)', background: 'linear-gradient(135deg, rgba(8, 12, 24, 0.9) 0%, rgba(20, 35, 70, 0.5) 100%)' }}>
+                  {/* Banner illustration — top of card */}
+                  <div className="overflow-hidden relative" style={{ height: 'clamp(140px, 20vw, 180px)', background: 'linear-gradient(135deg, rgba(8, 12, 24, 0.92) 0%, rgba(16, 28, 56, 0.65) 100%)' }}>
                     {it.image ? (
                       <img src={it.image} alt={it.imageAlt || it.title} className="w-full h-full object-cover" />
+                    ) : CASE_STUDY_ILLUSTRATIONS[i] ? (
+                      (() => {
+                        const Illust = CASE_STUDY_ILLUSTRATIONS[i]
+                        return (
+                          <Illust
+                            active={isActive}
+                            id={`cs-banner-${i + 1}`}
+                            className="absolute inset-0 w-full h-full"
+                          />
+                        )
+                      })()
                     ) : (
                       <ImagePlaceholder tag={it.tag} />
                     )}

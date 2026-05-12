@@ -36,21 +36,8 @@ export default function SidebarCapabilities() {
   return (
     <Container>
       <div className="max-w-[min(1240px,94vw)] mx-auto">
-        {/* Section header — labelled as alternate preview */}
+        {/* Section header */}
         <div className="text-center" style={{ paddingBottom: 12 }}>
-          <div
-            className="font-body mx-auto mb-3"
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: PERI,
-              opacity: 0.55,
-            }}
-          >
-            Alternate layout · sidebar variant
-          </div>
           <h2
             className="font-heading font-bold text-text-heading"
             style={{
