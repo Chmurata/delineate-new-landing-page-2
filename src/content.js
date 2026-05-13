@@ -131,8 +131,7 @@ export const caseStudies = {
       metrics: '300 clinical trials extracted · NONMEM-ready on delivery · Go / no-go decision supported',
       paragraphs: [
         'A biopharma company with a GLP-1 asset in late Phase 2 needed to quantify where their asset sat on the class-level exposure-response curve before committing to Phase 3. Internal estimate: 4–5 months of analyst time to build the cross-trial database.',
-        'Delineate delivered a NONMEM-ready MBMA database covering 300 trials across the GLP-1 and obesity landscape — trial- and arm-level data harmonized to consistent endpoint definitions, with covariates structured to the client\'s model specification. BLQ handling, missing data flags, data dictionary, and QC report all included.',
-        'The MBMA ran within two weeks of delivery. The model supported a positive Phase 3 go decision at the next development committee. The database is now anchoring the Phase 3 control arm specification.',
+        'Delineate delivered a NONMEM-ready MBMA database covering 300 trials across the GLP-1 and obesity landscape — trial- and arm-level data harmonized to consistent endpoint definitions, with covariates structured to the client\'s model specification and complex dose titration schedules accurately represented. BLQ handling, missing data flags, data dictionary, and QC report all included.',
       ],
       readMoreHref: '#',
     },
@@ -154,7 +153,6 @@ export const caseStudies = {
       paragraphs: [
         'Sanofi had a hybrid-AI PK model architecture ready but no scalable pathway to build a training corpus of the required scale. Manual digitization was too slow; commercial databases lacked the granularity and format alignment the AI pipeline required.',
         'Delineate screened 900 publications and used our AI graph digitization engine to extract 23,000+ individual data points from over 4,000 PK plots — capturing central estimates alongside error bars and variance measures. All data structured to the client\'s exact pipeline schema with compound metadata, study covariates, and provenance mapping.',
-        'Delivered in eight weeks versus an internal estimate of six to nine months. The model trained directly on delivery with no reformatting required. The database has since been extended twice, with Delineate maintaining the corpus as new literature is published.',
       ],
       readMoreHref: '#',
     },
@@ -165,17 +163,16 @@ export const caseStudies = {
       paragraphs: [
         'A BD&L team evaluating a time-pressured in-licensing opportunity needed a structured view of the competitive landscape — but key data on pipeline assets was scattered across multi-year congress proceedings, abstract books, investor presentations, and press releases.',
         'Delineate built a structured competitive intelligence database covering clinical stage, mechanism, trial design, efficacy and safety readouts, and dosing for each pipeline asset — drawing on congresses, published literature, regulatory documents, and trial registries. Abstract-only data was flagged with confidence ratings. The database was updated twice during diligence as new congress data emerged.',
-        'The BD team had a comprehensive competitive view within ten days. The database directly informed the valuation model and the deal evaluation proceeded on schedule. The engagement has since been extended as an ongoing CI resource for the therapeutic area franchise.',
       ],
       readMoreHref: '#',
     },
     {
       title: 'Surrogate endpoint database — Critical Path Institute',
       tag: 'Surrogate Endpoint Database',
-      metrics: '1,000s of studies AI-screened · 200+ publications digitized · Regulatory-grade evidence package',
+      metrics: '1,000s of studies AI-screened · 100+ publications digitized · Regulatory-grade evidence package',
       paragraphs: [
         'Establishing a surrogate endpoint for regulatory use requires demonstrating, across the totality of clinical evidence, that the proposed surrogate reliably predicts the clinical outcome of interest. For type 1 diabetes, this meant assembling and modeling a comprehensive database spanning decades of trial data — demanding both the breadth of a systematic literature review and the analytical rigor of a quantitative MBMA.',
-        'Delineate conducted an AI-accelerated systematic literature review across thousands of studies, compressing a process that would conventionally take many months into a fraction of the timeline. From the screened corpus, 200+ publications were taken forward for full digitization and structured extraction — capturing longitudinal biomarker trajectories, clinical outcome data, trial design characteristics, and patient population covariates. Full provenance documentation aligned to regulatory-grade standards.',
+        'Delineate conducted an AI-accelerated systematic literature review across thousands of studies, compressing a process that would conventionally take many months into a fraction of the timeline. From the screened corpus, 100+ publications were taken forward for full digitization and structured extraction — capturing longitudinal biomarker trajectories, clinical outcome data, trial design characteristics, and patient population covariates. Full provenance documentation aligned to regulatory-grade standards.',
         'The database provided the quantitative foundation for the surrogate endpoint qualification program. The collaboration with Critical Path Institute placed this work within the formal regulatory science pathway — with the evidence package designed from the outset to meet the evidentiary standards of FDA\'s surrogate endpoint qualification process.',
       ],
       readMoreHref: '#',
