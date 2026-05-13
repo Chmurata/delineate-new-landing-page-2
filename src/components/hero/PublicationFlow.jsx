@@ -404,7 +404,7 @@ export default function PublicationFlow({ overlay = false }) {
     return () => window.removeEventListener('mousemove', handleMouse)
   }, [])
 
-  // Desktop overlay: absolute, confined to right side (60% → 93% — 30% more breathing room from text column)
+  // Desktop overlay: absolute, confined to right side (matching prototype left:54% right:7% top:24% bottom:4%)
   // Mobile standalone: relative container with fixed height, animation fills it
   if (overlay) {
     return (
@@ -412,7 +412,7 @@ export default function PublicationFlow({ overlay = false }) {
         <motion.div
           style={{
             position: 'absolute',
-            left: '57%',
+            left: '54%',
             right: '7%',
             top: '24%',
             bottom: '4%',

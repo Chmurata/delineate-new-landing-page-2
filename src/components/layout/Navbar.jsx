@@ -7,13 +7,26 @@ import { hero } from '../../content'
 
 const ACCENT = '#7C9ED9'
 
-function NavLink({ children, onClick }) {
+const NAV_TARGETS = ['capabilities', 'audiences', 'casestudies']
+
+function scrollToId(id) {
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+function NavLink({ children, href, onClick }) {
   const [hovered, setHovered] = useState(false)
 
   return (
     <a
-      href="#"
-      onClick={onClick}
+      href={href}
+      onClick={(e) => {
+        if (href && href.startsWith('#')) {
+          e.preventDefault()
+          scrollToId(href.slice(1))
+        }
+        onClick?.(e)
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="relative inline-block font-heading text-sm tracking-wide transition-colors duration-250"
@@ -91,8 +104,8 @@ export default function Navbar({ scrollToSection }) {
 
         {/* Desktop links */}
         <div className="hidden lg:flex items-center gap-9">
-          {hero.nav.map(link => (
-            <NavLink key={link}>{link}</NavLink>
+          {hero.nav.map((link, i) => (
+            <NavLink key={link} href={NAV_TARGETS[i] ? `#${NAV_TARGETS[i]}` : '#'}>{link}</NavLink>
           ))}
         </div>
 
@@ -148,13 +161,19 @@ export default function Navbar({ scrollToSection }) {
               </button>
 
               <div className="flex flex-col gap-1">
-                {hero.nav.map(link => (
+                {hero.nav.map((link, i) => (
                   <a
                     key={link}
-                    href="#"
+                    href={NAV_TARGETS[i] ? `#${NAV_TARGETS[i]}` : '#'}
                     className="font-heading text-lg py-3 px-4 rounded-xl transition-colors"
                     style={{ color: '#9BA3A0', textDecoration: 'none' }}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={(e) => {
+                      if (NAV_TARGETS[i]) {
+                        e.preventDefault()
+                        scrollToId(NAV_TARGETS[i])
+                      }
+                      setMobileOpen(false)
+                    }}
                     onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; e.currentTarget.style.background = `${ACCENT}0A` }}
                     onMouseLeave={(e) => { e.currentTarget.style.color = '#9BA3A0'; e.currentTarget.style.background = 'transparent' }}
                   >

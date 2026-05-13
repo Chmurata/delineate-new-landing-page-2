@@ -10,20 +10,22 @@ import useActiveSection from './hooks/useActiveSection'
 
 const Capabilities = lazy(() => import('./components/sections/Capabilities'))
 const Audiences = lazy(() => import('./components/sections/Audiences'))
+const HowWeDoIt = lazy(() => import('./components/sections/HowWeDoIt'))
 const CaseStudies = lazy(() => import('./components/sections/CaseStudies'))
 const ClosingCTA = lazy(() => import('./components/sections/ClosingCTA'))
 const Footer = lazy(() => import('./components/layout/Footer'))
 
 const BASE = '#020B0F'
-const SECTION_IDS = ['hero', 'socialproof', 'capabilities', 'audiences', 'casestudies', 'closing']
+const SECTION_IDS = ['hero', 'socialproof', 'capabilities', 'audiences', 'howwedoit', 'casestudies', 'closing']
 
 function SectionWrap({ id, sectionRef, children, className = '' }) {
   return (
     <div
       ref={el => { if (sectionRef) sectionRef.current = el }}
+      id={id}
       data-section={id}
       className={className}
-      style={{ position: 'relative' }}
+      style={{ position: 'relative', scrollMarginTop: 100 }}
     >
       {children}
     </div>
@@ -82,6 +84,10 @@ export default function App() {
 
           <SectionWrap id="audiences" sectionRef={sectionRefs.audiences} className="py-[clamp(3rem,6vw,5rem)]">
             <Audiences />
+          </SectionWrap>
+
+          <SectionWrap id="howwedoit" sectionRef={sectionRefs.howwedoit} className="py-[clamp(3rem,6vw,5rem)]">
+            <HowWeDoIt />
           </SectionWrap>
 
           <SectionWrap id="casestudies" sectionRef={sectionRefs.casestudies} className="py-[clamp(3rem,6vw,5rem)]">

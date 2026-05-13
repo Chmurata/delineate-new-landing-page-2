@@ -42,15 +42,12 @@ export default function HeroSection() {
         className="relative flex flex-col xl:items-start items-center min-h-[80svh] justify-center"
         style={{
           zIndex: 10,
-          paddingTop: 'clamp(130px, 16vw, 160px)',
-          paddingRight: 'clamp(1.5rem, 8vw, 112px)',
-          paddingBottom: 'clamp(2rem, 4vw, 48px)',
-          paddingLeft: 'clamp(1rem, 5vw, 72px)',
+          padding: 'clamp(130px, 16vw, 160px) clamp(1.5rem, 8vw, 112px) clamp(2rem, 4vw, 48px)',
           pointerEvents: 'none',
         }}
       >
         <div
-          className="flex flex-col gap-6 text-center"
+          className="flex flex-col gap-6 text-center xl:text-left"
           style={{
             maxWidth: 720,
             width: '100%',
@@ -93,7 +90,7 @@ export default function HeroSection() {
           {/* Subtitle */}
           <motion.p
             className="font-heading"
-            style={{ fontSize: 'clamp(0.8rem, 1.5vw, 16px)', lineHeight: '22px', color: '#B4B7B2', margin: '0 auto', maxWidth: 640, whiteSpace: 'pre-line' }}
+            style={{ fontSize: 'clamp(0.8rem, 1.5vw, 16px)', lineHeight: '22px', color: '#B4B7B2', margin: 0, maxWidth: 660, whiteSpace: 'pre-line' }}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: isDesktop ? 1.2 : 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -103,7 +100,7 @@ export default function HeroSection() {
 
           {/* CTA buttons — single line, smaller on mobile */}
           <motion.div
-            className="flex flex-row items-center justify-center"
+            className="flex flex-row items-center justify-center xl:justify-start"
             style={{ gap: 'clamp(8px, 2vw, 14px)' }}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

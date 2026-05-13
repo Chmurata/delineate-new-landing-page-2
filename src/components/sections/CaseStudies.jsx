@@ -91,43 +91,7 @@ export default function CaseStudies() {
 
   return (
     <Container>
-      <SectionHeading className="text-center !mb-6">{caseStudies.header}</SectionHeading>
-
-      {/* Intro blurb — relocated from the removed Databases section */}
-      <p
-        className="font-heading text-text-body mx-auto text-center"
-        style={{
-          fontSize: 'clamp(14px, 1.4vw, 16px)',
-          lineHeight: 1.55,
-          maxWidth: 720,
-          marginBottom: 28,
-          opacity: 0.9,
-        }}
-      >
-        {caseStudies.intro}
-      </p>
-
-      {/* Consolidated guarantee table strip */}
-      <div className="mx-auto" style={{ maxWidth: 'min(1320px, 94vw)', marginBottom: 56 }}>
-        <div
-          className="rounded-xl flex flex-col lg:flex-row"
-          style={{
-            ...glassCardStyle(ACCENT),
-            border: '1px solid rgba(126, 184, 255, 0.12)',
-            overflow: 'hidden',
-          }}
-        >
-          {caseStudies.guarantees.map((text, i) => (
-            <GuaranteeCell
-              key={i}
-              text={text}
-              Icon={GUARANTEE_ICONS[i]}
-              index={i}
-              isLast={i === caseStudies.guarantees.length - 1}
-            />
-          ))}
-        </div>
-      </div>
+      <SectionHeading className="text-center !mb-10">{caseStudies.header}</SectionHeading>
 
       <div className="flex flex-col gap-6 max-w-[min(960px,90vw)] mx-auto">
         {/* Tabs — concept B: tag-only labels, single sliding hairline indicator below */}

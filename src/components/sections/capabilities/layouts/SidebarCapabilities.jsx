@@ -68,7 +68,7 @@ export default function SidebarCapabilities() {
           <aside
             ref={navRef}
             className="col-span-12 lg:col-span-4 xl:col-span-3 relative flex flex-col"
-            style={{ gap: 2 }}
+            style={{ gap: 4 }}
           >
             {/* Sliding vertical hairline indicator on the left edge of the nav */}
             <div
@@ -92,16 +92,18 @@ export default function SidebarCapabilities() {
                   key={item.number}
                   ref={(el) => (itemRefs.current[i] = el)}
                   onClick={() => setActiveIdx(i)}
-                  className="text-left cursor-pointer outline-none transition-colors"
+                  className="text-left cursor-pointer outline-none transition-colors flex items-center"
                   style={{
-                    padding: '12px 16px',
-                    paddingLeft: 18,
+                    flex: 1,
+                    minHeight: 64,
+                    padding: '14px 18px',
+                    paddingLeft: 22,
                     background: isActive ? 'rgba(126, 184, 255, 0.08)' : 'transparent',
                     border: 'none',
-                    borderRadius: 8,
+                    borderRadius: 10,
                     color: isActive ? PERI : 'rgba(220, 230, 245, 0.65)',
                     fontFamily: 'inherit',
-                    fontSize: 14,
+                    fontSize: 15.5,
                     fontWeight: isActive ? 600 : 500,
                     letterSpacing: '-0.005em',
                     transition: 'background 220ms ease, color 220ms ease, font-weight 220ms ease',
